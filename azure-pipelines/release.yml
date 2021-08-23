@@ -4,7 +4,7 @@ pr: none
 resources:
   pipelines:
   - pipeline: CI
-    source: Library # TODO: This should match the name of your CI pipeline
+    source: CSharpIsNull
     trigger:
       tags:
       - auto-release
@@ -28,7 +28,7 @@ stages:
           - task: GitHubRelease@1
             displayName: GitHub release (create)
             inputs:
-              gitHubConnection: # TODO: fill in service connection here
+              gitHubConnection: github.com_AArnott_OAuth
               repositoryName: $(Build.Repository.Name)
               target: $(resources.pipeline.CI.sourceCommit)
               tagSource: userSpecifiedTag
@@ -56,9 +56,9 @@ stages:
         deploy:
           steps:
           - download: CI
-            artifact: deployables-Windows
-            displayName: Download deployables-Windows artifact
-            patterns: 'deployables-Windows/*'
+            artifact: deployables-Linux
+            displayName: Download deployables-Linux artifact
+            patterns: 'deployables-Linux/*'
           - task: NuGetToolInstaller@1
             displayName: Use NuGet 5.x
             inputs:
@@ -67,6 +67,6 @@ stages:
             displayName: NuGet push
             inputs:
               command: push
-              packagesToPush: $(Pipeline.Workspace)/CI/deployables-Windows/*.nupkg
+              packagesToPush: $(Pipeline.Workspace)/CI/deployables-Linux/*.nupkg
               nuGetFeedType: external
-              publishFeedCredentials: # TODO: fill in service connection here
+              publishFeedCredentials: nuget.org
