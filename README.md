@@ -1,6 +1,6 @@
 # C# null test syntax analyzers
 
-<!-- [![NuGet package](https://img.shields.io/nuget/v/CSharpIsNullAnalyzer.svg)](https://nuget.org/packages/CSharpIsNullAnalyzer) -->
+[![NuGet package](https://img.shields.io/nuget/v/CSharpIsNullAnalyzer.svg)](https://nuget.org/packages/CSharpIsNullAnalyzer)
 [![NuGet package](https://img.shields.io/badge/nuget-From%20CI-yellow)](https://dev.azure.com/andrewarnott/OSS/_packaging?_a=package&feed=PublicCI&package=CSharpIsNullAnalyzer&version=0.1.278-beta&protocolType=NuGet)
 [![Build Status](https://dev.azure.com/andrewarnott/OSS/_apis/build/status/CSharpIsNull?branchName=main)](https://dev.azure.com/andrewarnott/OSS/_build/latest?definitionId=54&branchName=main)
 
@@ -16,7 +16,11 @@
 
 ## Consumption
 
-Until the analyzer is pushed to nuget.org in some form, you can [get it from my CI feed](https://dev.azure.com/andrewarnott/OSS/_packaging?_a=package&feed=PublicCI&package=CSharpIsNullAnalyzer&protocolType=NuGet):
+Install it via NuGet through the nuget badge at the top of this file.
+
+### Consume from CI
+
+To get the very latest analyzer [from my CI feed](https://dev.azure.com/andrewarnott/OSS/_packaging?_a=package&feed=PublicCI&package=CSharpIsNullAnalyzer&protocolType=NuGet):
 
 [Connect to the feed](https://dev.azure.com/andrewarnott/OSS/_packaging?_a=connect&feed=PublicCI):
 
