@@ -1,6 +1,7 @@
 # C# null test syntax analyzers
 
-[![NuGet package](https://img.shields.io/nuget/v/CSharpIsNullAnalyzer.svg)](https://nuget.org/packages/CSharpIsNullAnalyzer)
+<!-- [![NuGet package](https://img.shields.io/nuget/v/CSharpIsNullAnalyzer.svg)](https://nuget.org/packages/CSharpIsNullAnalyzer) -->
+[![NuGet package](https://img.shields.io/badge/nuget-From%20CI-yellow)](https://dev.azure.com/andrewarnott/OSS/_packaging?_a=package&feed=PublicCI&package=CSharpIsNullAnalyzer&version=0.1.278-beta&protocolType=NuGet)
 [![Build Status](https://dev.azure.com/andrewarnott/OSS/_apis/build/status/CSharpIsNull?branchName=main)](https://dev.azure.com/andrewarnott/OSS/_build/latest?definitionId=54&branchName=main)
 
 ## Features
