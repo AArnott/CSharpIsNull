@@ -98,4 +98,32 @@ class Test
 
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
     }
+
+    [Fact]
+    public async Task EqualsInArgument_ProducesDiagnostic()
+    {
+        string source = @"
+class Test
+{
+    void Method(object o)
+    {
+        Other(o [|== null|]);
+    }
+
+    void Other(bool condition) { }
+}";
+
+        string fixedSource = @"
+class Test
+{
+    void Method(object o)
+    {
+        Other(o is null);
+    }
+
+    void Other(bool condition) { }
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
+    }
 }

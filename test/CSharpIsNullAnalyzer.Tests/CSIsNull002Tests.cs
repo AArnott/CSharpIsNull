@@ -137,4 +137,44 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource1, CSIsNull002Fixer.IsObjectEquivalenceKey);
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
     }
+
+    [Fact]
+    public async Task NullNotEqualsInArgument_ProducesDiagnostic()
+    {
+        string source = @"
+class Test
+{
+    void Method(object o)
+    {
+        Other([|null !=|] o);
+    }
+
+    void Other(bool condition) { }
+}";
+
+        string fixedSource1 = @"
+class Test
+{
+    void Method(object o)
+    {
+        Other(o is object);
+    }
+
+    void Other(bool condition) { }
+}";
+
+        string fixedSource2 = @"
+class Test
+{
+    void Method(object o)
+    {
+        Other(o is not null);
+    }
+
+    void Other(bool condition) { }
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource1, CSIsNull002Fixer.IsObjectEquivalenceKey);
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
+    }
 }

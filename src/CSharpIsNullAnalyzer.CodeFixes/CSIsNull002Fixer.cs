@@ -46,7 +46,7 @@ namespace CSharpIsNullAnalyzer
                 if (diagnostic.Id == CSIsNull002.Id)
                 {
                     SyntaxNode? syntaxRoot = await context.Document.GetSyntaxRootAsync(context.CancellationToken);
-                    BinaryExpressionSyntax? expr = syntaxRoot?.FindNode(diagnostic.Location.SourceSpan).FirstAncestorOrSelf<BinaryExpressionSyntax>();
+                    BinaryExpressionSyntax? expr = syntaxRoot?.FindNode(diagnostic.Location.SourceSpan, getInnermostNodeForTie: true).FirstAncestorOrSelf<BinaryExpressionSyntax>();
                     if (expr is not null)
                     {
                         context.RegisterCodeFix(
