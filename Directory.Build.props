@@ -26,6 +26,8 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols Condition=" '$(DebugType)' != 'embedded' ">true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <TargetRoslynVersion>3.7.0</TargetRoslynVersion>
   </PropertyGroup>
 
   <ItemGroup>
