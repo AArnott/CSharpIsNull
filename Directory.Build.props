@@ -18,9 +18,9 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)\strongname.snk</AssemblyOriginatorKeyFile>
 
-    <Company>COMPANY-PLACEHOLDER</Company>
-    <Authors>COMPANY-PLACEHOLDER</Authors>
-    <Copyright>© COMPANY-PLACEHOLDER. All rights reserved.</Copyright>
+    <Company>Andrew Arnott</Company>
+    <Authors>Andrew Arnott</Authors>
+    <Copyright>© Andrew Arnott. All rights reserved.</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>

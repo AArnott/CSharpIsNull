@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Library\Library.csproj" />
+    <ProjectReference Include="..\..\src\CSharpIsNullAnalyzer\CSharpIsNullAnalyzer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
