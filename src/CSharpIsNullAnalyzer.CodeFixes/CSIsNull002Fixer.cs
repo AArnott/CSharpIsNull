@@ -58,8 +58,8 @@ namespace CSharpIsNullAnalyzer
                                     ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression }
                                         ? BinaryExpression(SyntaxKind.IsExpression, expr.Left, ObjectLiteral)
                                         : BinaryExpression(SyntaxKind.IsExpression, expr.Right, ObjectLiteral);
-                                    syntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
-                                    document = document.WithSyntaxRoot(syntaxRoot);
+                                    SyntaxNode updatedSyntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
+                                    document = document.WithSyntaxRoot(updatedSyntaxRoot);
                                     return Task.FromResult(document);
                                 },
                                 equivalenceKey: IsObjectEquivalenceKey),
@@ -76,8 +76,8 @@ namespace CSharpIsNullAnalyzer
                                         ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression }
                                             ? IsPatternExpression(expr.Left, NotNullPattern)
                                             : IsPatternExpression(expr.Right, NotNullPattern);
-                                        syntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
-                                        document = document.WithSyntaxRoot(syntaxRoot);
+                                        SyntaxNode updatedSyntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
+                                        document = document.WithSyntaxRoot(updatedSyntaxRoot);
                                         return Task.FromResult(document);
                                     },
                                     equivalenceKey: IsNotNullEquivalenceKey),
