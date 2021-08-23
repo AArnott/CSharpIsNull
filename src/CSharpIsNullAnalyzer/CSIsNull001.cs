@@ -7,7 +7,10 @@ namespace CSharpIsNullAnalyzer
     using System.Collections.Immutable;
     using System.Linq;
     using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
+    using Microsoft.CodeAnalysis.Text;
 
     /// <summary>
     /// An analyzer that finds <c>== null</c> expressions.
@@ -40,6 +43,30 @@ namespace CSharpIsNullAnalyzer
         {
             context.EnableConcurrentExecution();
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.ReportDiagnostics);
+
+            context.RegisterSyntaxNodeAction(
+                ctxt =>
+                {
+                    if (ctxt.Node is BinaryExpressionSyntax
+                        {
+                            OperatorToken: { RawKind: (int)SyntaxKind.EqualsEqualsToken } opRight,
+                            Right: LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression } right,
+                        })
+                    {
+                        Location location = ctxt.Node.SyntaxTree.GetLocation(new TextSpan(opRight.SpanStart, right.Span.End - opRight.SpanStart));
+                        ctxt.ReportDiagnostic(Diagnostic.Create(Descriptor, location));
+                    }
+                    else if (ctxt.Node is BinaryExpressionSyntax
+                        {
+                            OperatorToken: { RawKind: (int)SyntaxKind.EqualsEqualsToken } opLeft,
+                            Left: LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression } left,
+                        })
+                    {
+                        Location location = ctxt.Node.SyntaxTree.GetLocation(new TextSpan(left.SpanStart, opLeft.Span.End - left.SpanStart));
+                        ctxt.ReportDiagnostic(Diagnostic.Create(Descriptor, location));
+                    }
+                },
+                SyntaxKind.EqualsExpression);
         }
     }
 }
