@@ -5,3 +5,4 @@
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
 CSIsNull001 | Usage | Info | CSIsNull001
+CSIsNull002 | Usage | Info | CSIsNull002

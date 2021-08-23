@@ -68,5 +68,23 @@ namespace CSharpIsNullAnalyzer {
                 return ResourceManager.GetString("CSIsNull001_FixTitle", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use `is object` instead..
+        /// </summary>
+        internal static string CSIsNull002_Fix1Title {
+            get {
+                return ResourceManager.GetString("CSIsNull002_Fix1Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use `is not null` instead..
+        /// </summary>
+        internal static string CSIsNull002_Fix2Title {
+            get {
+                return ResourceManager.GetString("CSIsNull002_Fix2Title", resourceCulture);
+            }
+        }
     }
 }

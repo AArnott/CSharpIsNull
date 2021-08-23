@@ -3,55 +3,55 @@
 
 using System.Threading.Tasks;
 using Xunit;
-using VerifyCS = CSharpCodeFixVerifier<CSharpIsNullAnalyzer.CSIsNull001, CSharpIsNullAnalyzer.CSIsNull001Fixer>;
+using VerifyCS = CSharpCodeFixVerifier<CSharpIsNullAnalyzer.CSIsNull002, CSharpIsNullAnalyzer.CSIsNull002Fixer>;
 
-public class CsIsNull001Tests
+public class CSIsNull002Tests
 {
     [Fact]
-    public async Task EqualsNullInExpressionBody_ProducesDiagnostic()
+    public async Task NotEqualsNullInExpressionBody_ProducesDiagnostic()
     {
         string source = @"
 class Test
 {
-    bool Method(object o) => o [|== null|];
+    bool Method(object o) => o [|!= null|];
 }";
 
         string fixedSource = @"
 class Test
 {
-    bool Method(object o) => o is null;
+    bool Method(object o) => o is object;
 }";
 
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
     }
 
     [Fact]
-    public async Task NullEqualsInExpressionBody_ProducesDiagnostic()
+    public async Task NullNotEqualsInExpressionBody_ProducesDiagnostic()
     {
         string source = @"
 class Test
 {
-    bool Method(object o) => [|null ==|] o;
+    bool Method(object o) => [|null !=|] o;
 }";
 
         string fixedSource = @"
 class Test
 {
-    bool Method(object o) => o is null;
+    bool Method(object o) => o is object;
 }";
 
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
     }
 
     [Fact]
-    public async Task EqualsNullInIfExpression_ProducesDiagnostic()
+    public async Task NotEqualsNullInIfExpression_ProducesDiagnostic()
     {
         string source = @"
 class Test
 {
     void Method(object o)
     {
-        if (o [|== null|])
+        if (o [|!= null|])
         {
         }
     }
@@ -62,7 +62,7 @@ class Test
 {
     void Method(object o)
     {
-        if (o is null)
+        if (o is object)
         {
         }
     }
@@ -72,14 +72,14 @@ class Test
     }
 
     [Fact]
-    public async Task NullEqualsInIfExpression_ProducesDiagnostic()
+    public async Task NullNotEqualsInIfExpression_ProducesDiagnostic()
     {
         string source = @"
 class Test
 {
     void Method(object o)
     {
-        if ([|null ==|] o)
+        if ([|null !=|] o)
         {
         }
     }
@@ -90,7 +90,7 @@ class Test
 {
     void Method(object o)
     {
-        if (o is null)
+        if (o is object)
         {
         }
     }
