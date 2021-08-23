@@ -49,22 +49,6 @@ namespace CSharpIsNullAnalyzer
                     BinaryExpressionSyntax? expr = syntaxRoot?.FindNode(diagnostic.Location.SourceSpan, getInnermostNodeForTie: true).FirstAncestorOrSelf<BinaryExpressionSyntax>();
                     if (expr is not null)
                     {
-                        context.RegisterCodeFix(
-                            CodeAction.Create(
-                                Strings.CSIsNull002_Fix1Title,
-                                ct =>
-                                {
-                                    Document document = context.Document;
-                                    ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression }
-                                        ? BinaryExpression(SyntaxKind.IsExpression, expr.Left, ObjectLiteral)
-                                        : BinaryExpression(SyntaxKind.IsExpression, expr.Right, ObjectLiteral);
-                                    SyntaxNode updatedSyntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
-                                    document = document.WithSyntaxRoot(updatedSyntaxRoot);
-                                    return Task.FromResult(document);
-                                },
-                                equivalenceKey: IsObjectEquivalenceKey),
-                            diagnostic);
-
                         if (context.Document.Project.ParseOptions is CSharpParseOptions { LanguageVersion: >= LanguageVersion.CSharp9 })
                         {
                             context.RegisterCodeFix(
@@ -83,6 +67,22 @@ namespace CSharpIsNullAnalyzer
                                     equivalenceKey: IsNotNullEquivalenceKey),
                                 diagnostic);
                         }
+
+                        context.RegisterCodeFix(
+                            CodeAction.Create(
+                                Strings.CSIsNull002_Fix1Title,
+                                ct =>
+                                {
+                                    Document document = context.Document;
+                                    ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression }
+                                        ? BinaryExpression(SyntaxKind.IsExpression, expr.Left, ObjectLiteral)
+                                        : BinaryExpression(SyntaxKind.IsExpression, expr.Right, ObjectLiteral);
+                                    SyntaxNode updatedSyntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
+                                    document = document.WithSyntaxRoot(updatedSyntaxRoot);
+                                    return Task.FromResult(document);
+                                },
+                                equivalenceKey: IsObjectEquivalenceKey),
+                            diagnostic);
                     }
                 }
             }
