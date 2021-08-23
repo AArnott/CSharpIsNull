@@ -35,7 +35,7 @@ namespace CSharpIsNullAnalyzer
                 {
                     SyntaxNode? syntaxRoot = await context.Document.GetSyntaxRootAsync(context.CancellationToken);
                     BinaryExpressionSyntax? expr = syntaxRoot?.FindNode(diagnostic.Location.SourceSpan).FirstAncestorOrSelf<BinaryExpressionSyntax>();
-                    if (expr is object)
+                    if (expr is not null)
                     {
                         context.RegisterCodeFix(
                             CodeAction.Create(
