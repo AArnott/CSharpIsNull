@@ -10,5 +10,16 @@
 
 ## Consumption
 
-Simply install the nuget package.
-Diagnostics get Information severity treatment by default.
+Until the analyzer is pushed to nuget.org in some form, you can [get it from my CI feed](https://dev.azure.com/andrewarnott/OSS/_packaging?_a=package&feed=PublicCI&package=CSharpIsNullAnalyzer&protocolType=NuGet):
+
+[Connect to the feed](https://dev.azure.com/andrewarnott/OSS/_packaging?_a=connect&feed=PublicCI):
+
+```xml
+<add key="PublicCI" value="https://pkgs.dev.azure.com/andrewarnott/OSS/_packaging/PublicCI/nuget/v3/index.json" />
+```
+
+Then install the package with this command in your Package Manager Console:
+
+```ps1
+Install-Package CSharpIsNullAnalyzer -pre
+```
