@@ -11,21 +11,13 @@ trigger:
     - .vscode/
     - .github/
 
-parameters:
-- name: includeMacOS
-  displayName: Build on macOS
-  type: boolean
-  default: false # macOS is often bogged down in Azure Pipelines
-
 variables:
   TreatWarningsAsErrors: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   BuildConfiguration: Release
-  #codecov_token: # Get a new one from https://codecov.io/
-  #ci_feed: # Azure Artifacts feed name
+  codecov_token: 4cea7d85-5a0a-458e-beca-260c04190f2b
+  ci_feed: 6ed146e5-8e9c-46d6-a40f-da9367ed50cd/c20edbb7-8403-4456-8f43-f46b47e360b1
   NUGET_PACKAGES: $(Agent.TempDirectory)/.nuget/packages
 
 jobs:
 - template: azure-pipelines/build.yml
-  parameters:
-    includeMacOS: ${{ parameters.includeMacOS }}
