@@ -15,7 +15,7 @@ namespace CSharpIsNullAnalyzer
         /// <returns>The URL for the analyzer's documentation.</returns>
         internal static string GetHelpLink(string analyzerId)
         {
-            return $"https://github.com/aarnott/CSharpIsNullAnalyzer/blob/main/doc/analyzers/{analyzerId}.md";
+            return $"https://github.com/AArnott/CSharpIsNull/blob/main/doc/analyzers/{analyzerId}.md";
         }
     }
 }
