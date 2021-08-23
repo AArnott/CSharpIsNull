@@ -8,6 +8,11 @@
 * Guard against bugs from testing structs against `null`.
 * Bulk code fix will update all your code at once.
 
+### Analyzers
+
+* [CSIsNull001](doc/analyzers/CSIsNull001.md) to catch uses of `== null`
+* [CSIsNull002](doc/analyzers/CSIsNull002.md) to catch uses of `!= null`
+
 ## Consumption
 
 Until the analyzer is pushed to nuget.org in some form, you can [get it from my CI feed](https://dev.azure.com/andrewarnott/OSS/_packaging?_a=package&feed=PublicCI&package=CSharpIsNullAnalyzer&protocolType=NuGet):
