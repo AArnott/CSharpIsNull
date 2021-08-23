@@ -3,6 +3,7 @@
   <PropertyGroup>
     <RootNamespace>CSharpIsNullAnalyzer</RootNamespace>
     <PackageId>CSharpIsNullAnalyzer</PackageId>
+    <DevelopmentDependency>true</DevelopmentDependency>
     <Description>C# analyzer to encourage use of `is null` and `is object` syntax over `== null` or `!= null`.</Description>
     <PackageTags>C#;Analyzers</PackageTags>
     <IncludeBuildOutput>false</IncludeBuildOutput>
