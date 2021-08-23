@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Threading.Tasks;
+using CSharpIsNullAnalyzer;
 using Xunit;
 using VerifyCS = CSharpCodeFixVerifier<CSharpIsNullAnalyzer.CSIsNull002, CSharpIsNullAnalyzer.CSIsNull002Fixer>;
 
@@ -16,13 +17,20 @@ class Test
     bool Method(object o) => o [|!= null|];
 }";
 
-        string fixedSource = @"
+        string fixedSource1 = @"
 class Test
 {
     bool Method(object o) => o is object;
 }";
 
-        await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
+        string fixedSource2 = @"
+class Test
+{
+    bool Method(object o) => o is not null;
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource1, CSIsNull002Fixer.IsObjectEquivalenceKey);
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
     }
 
     [Fact]
@@ -34,13 +42,20 @@ class Test
     bool Method(object o) => [|null !=|] o;
 }";
 
-        string fixedSource = @"
+        string fixedSource1 = @"
 class Test
 {
     bool Method(object o) => o is object;
 }";
 
-        await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
+        string fixedSource2 = @"
+class Test
+{
+    bool Method(object o) => o is not null;
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource1, CSIsNull002Fixer.IsObjectEquivalenceKey);
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
     }
 
     [Fact]
@@ -57,7 +72,7 @@ class Test
     }
 }";
 
-        string fixedSource = @"
+        string fixedSource1 = @"
 class Test
 {
     void Method(object o)
@@ -68,7 +83,19 @@ class Test
     }
 }";
 
-        await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
+        string fixedSource2 = @"
+class Test
+{
+    void Method(object o)
+    {
+        if (o is not null)
+        {
+        }
+    }
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource1, CSIsNull002Fixer.IsObjectEquivalenceKey);
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
     }
 
     [Fact]
@@ -85,7 +112,7 @@ class Test
     }
 }";
 
-        string fixedSource = @"
+        string fixedSource1 = @"
 class Test
 {
     void Method(object o)
@@ -96,6 +123,18 @@ class Test
     }
 }";
 
-        await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
+        string fixedSource2 = @"
+class Test
+{
+    void Method(object o)
+    {
+        if (o is not null)
+        {
+        }
+    }
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource1, CSIsNull002Fixer.IsObjectEquivalenceKey);
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
     }
 }

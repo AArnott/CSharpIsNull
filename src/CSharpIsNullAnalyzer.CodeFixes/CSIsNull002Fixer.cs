@@ -11,6 +11,7 @@ namespace CSharpIsNullAnalyzer
     using Microsoft.CodeAnalysis.CodeFixes;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
+    using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
     /// <summary>
     /// Provides code fixes for <see cref="CSIsNull002"/>.
@@ -18,10 +19,21 @@ namespace CSharpIsNullAnalyzer
     [ExportCodeFixProvider(LanguageNames.CSharp)]
     public class CSIsNull002Fixer : CodeFixProvider
     {
+        /// <summary>
+        /// The equivalence key used for the code fix that uses <c>is object</c> syntax.
+        /// </summary>
+        public const string IsObjectEquivalenceKey = "IsObject";
+
+        /// <summary>
+        /// The equivalence key used for the code fix that uses <c>is not null</c> syntax.
+        /// </summary>
+        public const string IsNotNullEquivalenceKey = "IsNotNull";
+
         private static readonly ImmutableArray<string> ReusableFixableDiagnosticIds = ImmutableArray.Create(
             CSIsNull002.Id);
 
-        private static readonly ExpressionSyntax ObjectLiteral = SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.ObjectKeyword));
+        private static readonly ExpressionSyntax ObjectLiteral = PredefinedType(Token(SyntaxKind.ObjectKeyword));
+        private static readonly PatternSyntax NotNullPattern = UnaryPattern(Token(SyntaxKind.NotKeyword), ConstantPattern(LiteralExpression(SyntaxKind.NullLiteralExpression)));
 
         /// <inheritdoc/>
         public override ImmutableArray<string> FixableDiagnosticIds => ReusableFixableDiagnosticIds;
@@ -44,14 +56,33 @@ namespace CSharpIsNullAnalyzer
                                 {
                                     Document document = context.Document;
                                     ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression }
-                                        ? SyntaxFactory.BinaryExpression(SyntaxKind.IsExpression, expr.Left, ObjectLiteral)
-                                        : SyntaxFactory.BinaryExpression(SyntaxKind.IsExpression, expr.Right, ObjectLiteral);
+                                        ? BinaryExpression(SyntaxKind.IsExpression, expr.Left, ObjectLiteral)
+                                        : BinaryExpression(SyntaxKind.IsExpression, expr.Right, ObjectLiteral);
                                     syntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
                                     document = document.WithSyntaxRoot(syntaxRoot);
                                     return Task.FromResult(document);
                                 },
-                                equivalenceKey: "isNull"),
+                                equivalenceKey: IsObjectEquivalenceKey),
                             diagnostic);
+
+                        if (context.Document.Project.ParseOptions is CSharpParseOptions { LanguageVersion: >= LanguageVersion.CSharp9 })
+                        {
+                            context.RegisterCodeFix(
+                                CodeAction.Create(
+                                    Strings.CSIsNull002_Fix2Title,
+                                    ct =>
+                                    {
+                                        Document document = context.Document;
+                                        ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression }
+                                            ? IsPatternExpression(expr.Left, NotNullPattern)
+                                            : IsPatternExpression(expr.Right, NotNullPattern);
+                                        syntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
+                                        document = document.WithSyntaxRoot(syntaxRoot);
+                                        return Task.FromResult(document);
+                                    },
+                                    equivalenceKey: IsNotNullEquivalenceKey),
+                                diagnostic);
+                        }
                     }
                 }
             }
