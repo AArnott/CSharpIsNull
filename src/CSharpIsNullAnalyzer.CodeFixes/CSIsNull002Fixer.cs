@@ -49,7 +49,8 @@ namespace CSharpIsNullAnalyzer
                     BinaryExpressionSyntax? expr = syntaxRoot?.FindNode(diagnostic.Location.SourceSpan, getInnermostNodeForTie: true).FirstAncestorOrSelf<BinaryExpressionSyntax>();
                     if (expr is not null)
                     {
-                        if (context.Document.Project.ParseOptions is CSharpParseOptions { LanguageVersion: >= LanguageVersion.CSharp9 })
+                        if (context.Document.Project.ParseOptions is CSharpParseOptions { LanguageVersion: >= LanguageVersion.CSharp9 } &&
+                            diagnostic.Properties.ContainsKey(CSIsNull002.OfferIsNotNullFixKey))
                         {
                             context.RegisterCodeFix(
                                 CodeAction.Create(
