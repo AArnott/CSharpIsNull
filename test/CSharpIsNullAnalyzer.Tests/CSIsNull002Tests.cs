@@ -177,4 +177,66 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource1, CSIsNull002Fixer.IsObjectEquivalenceKey);
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
     }
+
+    [Fact]
+    public async Task NotEqualsNullInExpressionTree_TargetTyped_OffersOneCodeFix()
+    {
+        string source = @"
+using System;
+using System.Linq.Expressions;
+
+class Test
+{
+    void Method()
+    {
+        Expression<Func<string, bool>> e = s => s [|!= null|];
+    }
+}";
+
+        string fixedSource = @"
+using System;
+using System.Linq.Expressions;
+
+class Test
+{
+    void Method()
+    {
+        Expression<Func<string, bool>> e = s => s is object;
+    }
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource, CSIsNull002Fixer.IsObjectEquivalenceKey);
+        await VerifyCS.VerifyCodeFixAsync(source, source, CSIsNull002Fixer.IsNotNullEquivalenceKey); // assert that this fix is not offered.
+    }
+
+    [Fact]
+    public async Task NotEqualsNullInExpressionTree_OffersOneCodeFix()
+    {
+        string source = @"
+using System;
+using System.Linq.Expressions;
+
+class Test
+{
+    void Method()
+    {
+        _ = (Expression<Func<string, bool>>)(s => s [|!= null|]);
+    }
+}";
+
+        string fixedSource = @"
+using System;
+using System.Linq.Expressions;
+
+class Test
+{
+    void Method()
+    {
+        _ = (Expression<Func<string, bool>>)(s => s is object);
+    }
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource, CSIsNull002Fixer.IsObjectEquivalenceKey);
+        await VerifyCS.VerifyCodeFixAsync(source, source, CSIsNull002Fixer.IsNotNullEquivalenceKey); // assert that this fix is not offered.
+    }
 }

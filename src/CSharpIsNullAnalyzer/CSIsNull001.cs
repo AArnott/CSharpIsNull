@@ -5,11 +5,13 @@ namespace CSharpIsNullAnalyzer
 {
     using System;
     using System.Collections.Immutable;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
+    using Microsoft.CodeAnalysis.Operations;
     using Microsoft.CodeAnalysis.Text;
 
     /// <summary>
@@ -44,29 +46,44 @@ namespace CSharpIsNullAnalyzer
             context.EnableConcurrentExecution();
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.ReportDiagnostics);
 
-            context.RegisterSyntaxNodeAction(
-                ctxt =>
+            context.RegisterCompilationStartAction(
+                startContext =>
                 {
-                    if (ctxt.Node is BinaryExpressionSyntax
+                    INamedTypeSymbol? linqExpressionType = startContext.Compilation.GetTypeByMetadataName(WellKnownTypeNames.SystemLinqExpressionsExpression1);
+                    startContext.RegisterOperationAction(
+                        ctxt =>
                         {
-                            OperatorToken: { RawKind: (int)SyntaxKind.EqualsEqualsToken } opRight,
-                            Right: LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression } right,
-                        })
-                    {
-                        Location location = ctxt.Node.SyntaxTree.GetLocation(new TextSpan(opRight.SpanStart, right.Span.End - opRight.SpanStart));
-                        ctxt.ReportDiagnostic(Diagnostic.Create(Descriptor, location));
-                    }
-                    else if (ctxt.Node is BinaryExpressionSyntax
-                        {
-                            OperatorToken: { RawKind: (int)SyntaxKind.EqualsEqualsToken } opLeft,
-                            Left: LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression } left,
-                        })
-                    {
-                        Location location = ctxt.Node.SyntaxTree.GetLocation(new TextSpan(left.SpanStart, opLeft.Span.End - left.SpanStart));
-                        ctxt.ReportDiagnostic(Diagnostic.Create(Descriptor, location));
-                    }
-                },
-                SyntaxKind.EqualsExpression);
+                            if (ctxt.Operation.Type.SpecialType == SpecialType.System_Boolean)
+                            {
+                                if (ctxt.Operation is IBinaryOperation { OperatorKind: BinaryOperatorKind.Equals } binaryOp)
+                                {
+                                    Location? location = null;
+                                    if (binaryOp.RightOperand is IConversionOperation { ConstantValue: { HasValue: true, Value: null } })
+                                    {
+                                        location = binaryOp.RightOperand.Syntax.GetLocation();
+                                        if (binaryOp.Syntax is BinaryExpressionSyntax { OperatorToken: { } operatorLocation, Right: { } right })
+                                        {
+                                            location = ctxt.Operation.Syntax.SyntaxTree.GetLocation(new TextSpan(operatorLocation.SpanStart, right.Span.End - operatorLocation.SpanStart));
+                                        }
+                                    }
+                                    else if (binaryOp.LeftOperand is IConversionOperation { ConstantValue: { HasValue: true, Value: null } })
+                                    {
+                                        location = binaryOp.LeftOperand.Syntax.GetLocation();
+                                        if (binaryOp.Syntax is BinaryExpressionSyntax { OperatorToken: { } operatorLocation, Left: { } left })
+                                        {
+                                            location = ctxt.Operation.Syntax.SyntaxTree.GetLocation(new TextSpan(left.SpanStart, operatorLocation.Span.End - left.SpanStart));
+                                        }
+                                    }
+
+                                    if (location is object && !binaryOp.IsWithinExpressionTree(linqExpressionType))
+                                    {
+                                        ctxt.ReportDiagnostic(Diagnostic.Create(Descriptor, location));
+                                    }
+                                }
+                            }
+                        },
+                        OperationKind.Binary);
+                });
         }
     }
 }

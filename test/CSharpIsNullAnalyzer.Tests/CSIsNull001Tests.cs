@@ -126,4 +126,89 @@ class Test
 
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
     }
+
+    [Fact]
+    public async Task EqualsNull_NearExpressionTreeAssignment_ProducesDiagnostic()
+    {
+        string source = @"
+using System;
+using System.Linq.Expressions;
+
+class Test
+{
+    void Method()
+    {
+        Expression<Func<string, bool>> e = """" [|== null|] ? (s => s == null) : (Expression<Func<string, bool>>)null;
+    }
+}";
+
+        string fixedSource = @"
+using System;
+using System.Linq.Expressions;
+
+class Test
+{
+    void Method()
+    {
+        Expression<Func<string, bool>> e = """" is null ? (s => s == null) : (Expression<Func<string, bool>>)null;
+    }
+}";
+
+        await VerifyCS.VerifyAnalyzerAsync(source);
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
+    }
+
+    [Fact]
+    public async Task EqualsNullInExpressionTree_ProducesNoDiagnostic()
+    {
+        string source = @"
+using System;
+using System.Linq.Expressions;
+
+class Test
+{
+    void Method()
+    {
+        _ = (Expression<Func<string, bool>>)(s => s == null);
+    }
+}";
+
+        await VerifyCS.VerifyAnalyzerAsync(source);
+    }
+
+    [Fact]
+    public async Task NullEqualsInExpressionTree_ProducesNoDiagnostic()
+    {
+        string source = @"
+using System;
+using System.Linq.Expressions;
+
+class Test
+{
+    void Method()
+    {
+        _ = (Expression<Func<string, bool>>)(s => null == s);
+    }
+}";
+
+        await VerifyCS.VerifyAnalyzerAsync(source);
+    }
+
+    [Fact]
+    public async Task EqualsNullInExpressionTree_TargetTyped_ProducesNoDiagnostic()
+    {
+        string source = @"
+using System;
+using System.Linq.Expressions;
+
+class Test
+{
+    void Method()
+    {
+        Expression<Func<string, bool>> e = s => s == null;
+    }
+}";
+
+        await VerifyCS.VerifyAnalyzerAsync(source);
+    }
 }
