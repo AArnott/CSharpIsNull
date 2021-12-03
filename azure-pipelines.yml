@@ -16,7 +16,7 @@ variables:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   BuildConfiguration: Release
   codecov_token: 4cea7d85-5a0a-458e-beca-260c04190f2b
-  ci_feed: 6ed146e5-8e9c-46d6-a40f-da9367ed50cd/c20edbb7-8403-4456-8f43-f46b47e360b1
+  ci_feed: OSS/PublicCI
   NUGET_PACKAGES: $(Agent.TempDirectory)/.nuget/packages
 
 jobs:
