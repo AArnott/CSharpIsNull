@@ -10,8 +10,8 @@
 
 namespace CSharpIsNullAnalyzer {
     using System;
-    
-    
+
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -23,15 +23,15 @@ namespace CSharpIsNullAnalyzer {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Strings {
-        
+
         private static global::System.Resources.ResourceManager resourceMan;
-        
+
         private static global::System.Globalization.CultureInfo resourceCulture;
-        
+
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Strings() {
         }
-        
+
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
@@ -45,7 +45,7 @@ namespace CSharpIsNullAnalyzer {
                 return resourceMan;
             }
         }
-        
+
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
@@ -59,27 +59,27 @@ namespace CSharpIsNullAnalyzer {
                 resourceCulture = value;
             }
         }
-        
+
         /// <summary>
-        ///   Looks up a localized string similar to Use `is null` instead..
+        ///   Looks up a localized string similar to Use `is null` instead.
         /// </summary>
         internal static string CSIsNull001_FixTitle {
             get {
                 return ResourceManager.GetString("CSIsNull001_FixTitle", resourceCulture);
             }
         }
-        
+
         /// <summary>
-        ///   Looks up a localized string similar to Use `is object` instead..
+        ///   Looks up a localized string similar to Use `is object` instead.
         /// </summary>
         internal static string CSIsNull002_Fix1Title {
             get {
                 return ResourceManager.GetString("CSIsNull002_Fix1Title", resourceCulture);
             }
         }
-        
+
         /// <summary>
-        ///   Looks up a localized string similar to Use `is not null` instead..
+        ///   Looks up a localized string similar to Use `is not null` instead.
         /// </summary>
         internal static string CSIsNull002_Fix2Title {
             get {
