@@ -10,14 +10,23 @@ trigger:
     - '*.md'
     - .vscode/
     - .github/
+    - azure-pipelines/release.yml
+
+parameters:
+- name: RunTests
+  displayName: Run tests
+  type: boolean
+  default: true
 
 variables:
-  TreatWarningsAsErrors: true
+  MSBuildTreatWarningsAsErrors: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   BuildConfiguration: Release
   codecov_token: 4cea7d85-5a0a-458e-beca-260c04190f2b
   ci_feed: OSS/PublicCI
-  NUGET_PACKAGES: $(Agent.TempDirectory)/.nuget/packages
+  NUGET_PACKAGES: $(Agent.TempDirectory)/.nuget/packages/
 
 jobs:
 - template: azure-pipelines/build.yml
+  parameters:
+    RunTests: ${{ parameters.RunTests }}

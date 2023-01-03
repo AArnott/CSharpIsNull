@@ -1,95 +1,92 @@
 ﻿// Copyright (c) Andrew Arnott. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace CSharpIsNullAnalyzer
+using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeActions;
+using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+
+namespace CSharpIsNullAnalyzer;
+
+/// <summary>
+/// Provides code fixes for <see cref="CSIsNull002"/>.
+/// </summary>
+[ExportCodeFixProvider(LanguageNames.CSharp)]
+public class CSIsNull002Fixer : CodeFixProvider
 {
-    using System;
-    using System.Collections.Immutable;
-    using System.Threading.Tasks;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CodeActions;
-    using Microsoft.CodeAnalysis.CodeFixes;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+    /// <summary>
+    /// The equivalence key used for the code fix that uses <c>is object</c> syntax.
+    /// </summary>
+    public const string IsObjectEquivalenceKey = "IsObject";
 
     /// <summary>
-    /// Provides code fixes for <see cref="CSIsNull002"/>.
+    /// The equivalence key used for the code fix that uses <c>is not null</c> syntax.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp)]
-    public class CSIsNull002Fixer : CodeFixProvider
+    public const string IsNotNullEquivalenceKey = "IsNotNull";
+
+    private static readonly ImmutableArray<string> ReusableFixableDiagnosticIds = ImmutableArray.Create(
+        CSIsNull002.Id);
+
+    private static readonly ExpressionSyntax ObjectLiteral = PredefinedType(Token(SyntaxKind.ObjectKeyword));
+    private static readonly PatternSyntax NotNullPattern = UnaryPattern(Token(SyntaxKind.NotKeyword), ConstantPattern(LiteralExpression(SyntaxKind.NullLiteralExpression)));
+
+    /// <inheritdoc/>
+    public override ImmutableArray<string> FixableDiagnosticIds => ReusableFixableDiagnosticIds;
+
+    /// <inheritdoc/>
+    public override async Task RegisterCodeFixesAsync(CodeFixContext context)
     {
-        /// <summary>
-        /// The equivalence key used for the code fix that uses <c>is object</c> syntax.
-        /// </summary>
-        public const string IsObjectEquivalenceKey = "IsObject";
-
-        /// <summary>
-        /// The equivalence key used for the code fix that uses <c>is not null</c> syntax.
-        /// </summary>
-        public const string IsNotNullEquivalenceKey = "IsNotNull";
-
-        private static readonly ImmutableArray<string> ReusableFixableDiagnosticIds = ImmutableArray.Create(
-            CSIsNull002.Id);
-
-        private static readonly ExpressionSyntax ObjectLiteral = PredefinedType(Token(SyntaxKind.ObjectKeyword));
-        private static readonly PatternSyntax NotNullPattern = UnaryPattern(Token(SyntaxKind.NotKeyword), ConstantPattern(LiteralExpression(SyntaxKind.NullLiteralExpression)));
-
-        /// <inheritdoc/>
-        public override ImmutableArray<string> FixableDiagnosticIds => ReusableFixableDiagnosticIds;
-
-        /// <inheritdoc/>
-        public override async Task RegisterCodeFixesAsync(CodeFixContext context)
+        foreach (Diagnostic diagnostic in context.Diagnostics)
         {
-            foreach (Diagnostic diagnostic in context.Diagnostics)
+            if (diagnostic.Id == CSIsNull002.Id)
             {
-                if (diagnostic.Id == CSIsNull002.Id)
+                SyntaxNode? syntaxRoot = await context.Document.GetSyntaxRootAsync(context.CancellationToken);
+                BinaryExpressionSyntax? expr = syntaxRoot?.FindNode(diagnostic.Location.SourceSpan, getInnermostNodeForTie: true).FirstAncestorOrSelf<BinaryExpressionSyntax>();
+                if (expr is not null)
                 {
-                    SyntaxNode? syntaxRoot = await context.Document.GetSyntaxRootAsync(context.CancellationToken);
-                    BinaryExpressionSyntax? expr = syntaxRoot?.FindNode(diagnostic.Location.SourceSpan, getInnermostNodeForTie: true).FirstAncestorOrSelf<BinaryExpressionSyntax>();
-                    if (expr is not null)
+                    if (context.Document.Project.ParseOptions is CSharpParseOptions { LanguageVersion: >= LanguageVersion.CSharp9 } &&
+                        diagnostic.Properties.ContainsKey(CSIsNull002.OfferIsNotNullFixKey))
                     {
-                        if (context.Document.Project.ParseOptions is CSharpParseOptions { LanguageVersion: >= LanguageVersion.CSharp9 } &&
-                            diagnostic.Properties.ContainsKey(CSIsNull002.OfferIsNotNullFixKey))
-                        {
-                            context.RegisterCodeFix(
-                                CodeAction.Create(
-                                    Strings.CSIsNull002_Fix2Title,
-                                    ct =>
-                                    {
-                                        Document document = context.Document;
-                                        ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression }
-                                            ? IsPatternExpression(expr.Left, NotNullPattern)
-                                            : IsPatternExpression(expr.Right, NotNullPattern);
-                                        SyntaxNode updatedSyntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
-                                        document = document.WithSyntaxRoot(updatedSyntaxRoot);
-                                        return Task.FromResult(document);
-                                    },
-                                    equivalenceKey: IsNotNullEquivalenceKey),
-                                diagnostic);
-                        }
-
                         context.RegisterCodeFix(
                             CodeAction.Create(
-                                Strings.CSIsNull002_Fix1Title,
+                                Strings.CSIsNull002_Fix2Title,
                                 ct =>
                                 {
                                     Document document = context.Document;
                                     ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression }
-                                        ? BinaryExpression(SyntaxKind.IsExpression, expr.Left, ObjectLiteral)
-                                        : BinaryExpression(SyntaxKind.IsExpression, expr.Right, ObjectLiteral);
+                                        ? IsPatternExpression(expr.Left, NotNullPattern)
+                                        : IsPatternExpression(expr.Right, NotNullPattern);
                                     SyntaxNode updatedSyntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
                                     document = document.WithSyntaxRoot(updatedSyntaxRoot);
                                     return Task.FromResult(document);
                                 },
-                                equivalenceKey: IsObjectEquivalenceKey),
+                                equivalenceKey: IsNotNullEquivalenceKey),
                             diagnostic);
                     }
+
+                    context.RegisterCodeFix(
+                        CodeAction.Create(
+                            Strings.CSIsNull002_Fix1Title,
+                            ct =>
+                            {
+                                Document document = context.Document;
+                                ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression }
+                                    ? BinaryExpression(SyntaxKind.IsExpression, expr.Left, ObjectLiteral)
+                                    : BinaryExpression(SyntaxKind.IsExpression, expr.Right, ObjectLiteral);
+                                SyntaxNode updatedSyntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
+                                document = document.WithSyntaxRoot(updatedSyntaxRoot);
+                                return Task.FromResult(document);
+                            },
+                            equivalenceKey: IsObjectEquivalenceKey),
+                        diagnostic);
                 }
             }
         }
-
-        /// <inheritdoc />
-        public override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
     }
+
+    /// <inheritdoc />
+    public override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 }
