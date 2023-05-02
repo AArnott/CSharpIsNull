@@ -41,7 +41,7 @@ public class CSIsNull001Fixer : CodeFixProvider
                             ct =>
                             {
                                 Document document = context.Document;
-                                IsPatternExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression }
+                                IsPatternExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression or (int)SyntaxKind.DefaultLiteralExpression }
                                     ? SyntaxFactory.IsPatternExpression(expr.Left, NullPattern)
                                     : SyntaxFactory.IsPatternExpression(expr.Right, NullPattern);
                                 syntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
