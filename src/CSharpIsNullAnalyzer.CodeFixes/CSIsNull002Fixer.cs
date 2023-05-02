@@ -56,7 +56,7 @@ public class CSIsNull002Fixer : CodeFixProvider
                                 ct =>
                                 {
                                     Document document = context.Document;
-                                    ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression }
+                                    ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression or (int)SyntaxKind.DefaultLiteralExpression }
                                         ? IsPatternExpression(expr.Left, NotNullPattern)
                                         : IsPatternExpression(expr.Right, NotNullPattern);
                                     SyntaxNode updatedSyntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
@@ -73,7 +73,7 @@ public class CSIsNull002Fixer : CodeFixProvider
                             ct =>
                             {
                                 Document document = context.Document;
-                                ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression }
+                                ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression or (int)SyntaxKind.DefaultLiteralExpression }
                                     ? BinaryExpression(SyntaxKind.IsExpression, expr.Left, ObjectLiteral)
                                     : BinaryExpression(SyntaxKind.IsExpression, expr.Right, ObjectLiteral);
                                 SyntaxNode updatedSyntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);

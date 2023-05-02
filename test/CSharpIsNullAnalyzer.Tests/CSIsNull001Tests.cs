@@ -210,4 +210,32 @@ class Test
 
         await VerifyCS.VerifyAnalyzerAsync(source);
     }
+
+    [Fact]
+    public async Task EqualsDefaultInIfExpression_ProducesDiagnostic()
+    {
+        string source = @"
+class Test
+{
+    void Method(object o)
+    {
+        if (o [|== default|])
+        {
+        }
+    }
+}";
+
+        string fixedSource = @"
+class Test
+{
+    void Method(object o)
+    {
+        if (o is null)
+        {
+        }
+    }
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
+    }
 }

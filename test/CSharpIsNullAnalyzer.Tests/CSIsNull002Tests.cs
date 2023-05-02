@@ -238,4 +238,44 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource, CSIsNull002Fixer.IsObjectEquivalenceKey);
         await VerifyCS.VerifyCodeFixAsync(source, source, CSIsNull002Fixer.IsNotNullEquivalenceKey); // assert that this fix is not offered.
     }
+
+    [Fact]
+    public async Task NotEqualsDefaultInIfExpression_ProducesDiagnostic()
+    {
+        string source = @"
+class Test
+{
+    void Method(object o)
+    {
+        if (o [|!= default|])
+        {
+        }
+    }
+}";
+
+        string fixedSource1 = @"
+class Test
+{
+    void Method(object o)
+    {
+        if (o is object)
+        {
+        }
+    }
+}";
+
+        string fixedSource2 = @"
+class Test
+{
+    void Method(object o)
+    {
+        if (o is not null)
+        {
+        }
+    }
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource1, CSIsNull002Fixer.IsObjectEquivalenceKey);
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
+    }
 }
