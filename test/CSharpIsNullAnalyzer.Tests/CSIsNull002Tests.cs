@@ -278,4 +278,21 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource1, CSIsNull002Fixer.IsObjectEquivalenceKey);
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
     }
+
+    [Fact]
+    public async Task NotEqualsDefaultValueType_ProducesNoDiagnostic()
+    {
+        string source = @"
+class Test
+{
+    void Method(int o)
+    {
+        if (o != default)
+        {
+        }
+    }
+}";
+
+        await VerifyCS.VerifyAnalyzerAsync(source);
+    }
 }
