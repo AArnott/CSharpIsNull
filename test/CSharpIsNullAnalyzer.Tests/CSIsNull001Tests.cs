@@ -238,4 +238,21 @@ class Test
 
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
     }
+
+    [Fact]
+    public async Task EqualsDefaultValueType_ProducesNoDiagnostic()
+    {
+        string source = @"
+class Test
+{
+    void Method(int o)
+    {
+        if (o == default)
+        {
+        }
+    }
+}";
+
+        await VerifyCS.VerifyAnalyzerAsync(source);
+    }
 }
