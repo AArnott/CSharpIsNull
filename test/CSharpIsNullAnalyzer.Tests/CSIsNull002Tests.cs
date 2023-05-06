@@ -295,4 +295,84 @@ class Test
 
         await VerifyCS.VerifyAnalyzerAsync(source);
     }
+
+    [Fact]
+    public async Task CodeFixDoesNotAffectFormatting()
+    {
+        string source = @"
+class Test
+{
+    string SafeString(string? message)
+    {
+        return message [|!= null|] // Some Comment
+            ? message
+            : string.Empty;
+    }
+}";
+
+        string fixedSource1 = @"
+class Test
+{
+    string SafeString(string? message)
+    {
+        return message is object // Some Comment
+            ? message
+            : string.Empty;
+    }
+}";
+
+        string fixedSource2 = @"
+class Test
+{
+    string SafeString(string? message)
+    {
+        return message is not null // Some Comment
+            ? message
+            : string.Empty;
+    }
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource1, CSIsNull002Fixer.IsObjectEquivalenceKey);
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
+    }
+
+    [Fact]
+    public async Task CodeFixDoesNotAffectFormattingReversed()
+    {
+        string source = @"
+class Test
+{
+    string SafeString(string? message)
+    {
+        return [|null !=|] message // Some Comment
+            ? message
+            : string.Empty;
+    }
+}";
+
+        string fixedSource1 = @"
+class Test
+{
+    string SafeString(string? message)
+    {
+        return message is object // Some Comment
+            ? message
+            : string.Empty;
+    }
+}";
+
+        string fixedSource2 = @"
+class Test
+{
+    string SafeString(string? message)
+    {
+        return message is not null // Some Comment
+            ? message
+            : string.Empty;
+    }
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource1, CSIsNull002Fixer.IsObjectEquivalenceKey);
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
+    }
 }

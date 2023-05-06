@@ -56,9 +56,10 @@ public class CSIsNull002Fixer : CodeFixProvider
                                 ct =>
                                 {
                                     Document document = context.Document;
+                                    PatternSyntax notNullWithTrivia = NotNullPattern.WithTriviaFrom(expr.Right);
                                     ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression or (int)SyntaxKind.DefaultLiteralExpression }
-                                        ? IsPatternExpression(expr.Left, NotNullPattern)
-                                        : IsPatternExpression(expr.Right, NotNullPattern);
+                                        ? IsPatternExpression(expr.Left, notNullWithTrivia)
+                                        : IsPatternExpression(expr.Right.WithoutTrailingTrivia().WithTrailingTrivia(Space), notNullWithTrivia);
                                     SyntaxNode updatedSyntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
                                     document = document.WithSyntaxRoot(updatedSyntaxRoot);
                                     return Task.FromResult(document);
@@ -73,9 +74,10 @@ public class CSIsNull002Fixer : CodeFixProvider
                             ct =>
                             {
                                 Document document = context.Document;
+                                ExpressionSyntax objectWithTrivia = ObjectLiteral.WithTriviaFrom(expr.Right);
                                 ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression or (int)SyntaxKind.DefaultLiteralExpression }
-                                    ? BinaryExpression(SyntaxKind.IsExpression, expr.Left, ObjectLiteral)
-                                    : BinaryExpression(SyntaxKind.IsExpression, expr.Right, ObjectLiteral);
+                                    ? BinaryExpression(SyntaxKind.IsExpression, expr.Left, objectWithTrivia)
+                                    : BinaryExpression(SyntaxKind.IsExpression, expr.Right.WithoutTrailingTrivia().WithTrailingTrivia(Space), objectWithTrivia);
                                 SyntaxNode updatedSyntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
                                 document = document.WithSyntaxRoot(updatedSyntaxRoot);
                                 return Task.FromResult(document);

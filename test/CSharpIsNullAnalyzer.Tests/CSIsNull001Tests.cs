@@ -255,4 +255,60 @@ class Test
 
         await VerifyCS.VerifyAnalyzerAsync(source);
     }
+
+    [Fact]
+    public async Task CodeFixDoesNotAffectFormatting()
+    {
+        string source = @"
+class Test
+{
+    string SafeString(string? message)
+    {
+        return message [|== null|] // Some Comment
+            ? string.Empty
+            : message;
+    }
+}";
+
+        string fixedSource = @"
+class Test
+{
+    string SafeString(string? message)
+    {
+        return message is null // Some Comment
+            ? string.Empty
+            : message;
+    }
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
+    }
+
+    [Fact]
+    public async Task CodeFixDoesNotAffectFormattingReversed()
+    {
+        string source = @"
+class Test
+{
+    string SafeString(string? message)
+    {
+        return [|null ==|] message
+            ? string.Empty
+            : message;
+    }
+}";
+
+        string fixedSource = @"
+class Test
+{
+    string SafeString(string? message)
+    {
+        return message is null
+            ? string.Empty
+            : message;
+    }
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
+    }
 }
