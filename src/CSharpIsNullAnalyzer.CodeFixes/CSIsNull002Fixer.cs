@@ -53,17 +53,7 @@ public class CSIsNull002Fixer : CodeFixProvider
                         context.RegisterCodeFix(
                             CodeAction.Create(
                                 Strings.CSIsNull002_Fix2Title,
-                                ct =>
-                                {
-                                    Document document = context.Document;
-                                    PatternSyntax notNullWithTrivia = NotNullPattern.WithTriviaFrom(expr.Right);
-                                    ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression or (int)SyntaxKind.DefaultLiteralExpression }
-                                        ? IsPatternExpression(expr.Left, notNullWithTrivia)
-                                        : IsPatternExpression(expr.Right.WithoutTrailingTrivia().WithTrailingTrivia(Space), notNullWithTrivia);
-                                    SyntaxNode updatedSyntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
-                                    document = document.WithSyntaxRoot(updatedSyntaxRoot);
-                                    return Task.FromResult(document);
-                                },
+                                ct => expr.ReplaceBinaryExpressionWithIsPattern(context.Document, syntaxRoot!, NotNullPattern),
                                 equivalenceKey: IsNotNullEquivalenceKey),
                             diagnostic);
                     }
@@ -71,17 +61,7 @@ public class CSIsNull002Fixer : CodeFixProvider
                     context.RegisterCodeFix(
                         CodeAction.Create(
                             Strings.CSIsNull002_Fix1Title,
-                            ct =>
-                            {
-                                Document document = context.Document;
-                                ExpressionSyntax objectWithTrivia = ObjectLiteral.WithTriviaFrom(expr.Right);
-                                ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression or (int)SyntaxKind.DefaultLiteralExpression }
-                                    ? BinaryExpression(SyntaxKind.IsExpression, expr.Left, objectWithTrivia)
-                                    : BinaryExpression(SyntaxKind.IsExpression, expr.Right.WithoutTrailingTrivia().WithTrailingTrivia(Space), objectWithTrivia);
-                                SyntaxNode updatedSyntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
-                                document = document.WithSyntaxRoot(updatedSyntaxRoot);
-                                return Task.FromResult(document);
-                            },
+                            ct => expr.ReplaceBinaryExpressionWithIsExpression(context.Document, syntaxRoot!, ObjectLiteral),
                             equivalenceKey: IsObjectEquivalenceKey),
                         diagnostic);
                 }

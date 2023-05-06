@@ -39,17 +39,7 @@ public class CSIsNull001Fixer : CodeFixProvider
                     context.RegisterCodeFix(
                         CodeAction.Create(
                             Strings.CSIsNull001_FixTitle,
-                            ct =>
-                            {
-                                Document document = context.Document;
-                                ConstantPatternSyntax nullWithTrivia = NullPattern.WithTriviaFrom(expr.Right);
-                                IsPatternExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression or (int)SyntaxKind.DefaultLiteralExpression }
-                                    ? IsPatternExpression(expr.Left, nullWithTrivia)
-                                    : IsPatternExpression(expr.Right.WithoutTrailingTrivia().WithTrailingTrivia(Space), nullWithTrivia);
-                                syntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
-                                document = document.WithSyntaxRoot(syntaxRoot);
-                                return Task.FromResult(document);
-                            },
+                            ct => expr.ReplaceBinaryExpressionWithIsPattern(context.Document, syntaxRoot!, NullPattern),
                             equivalenceKey: "isNull"),
                         diagnostic);
                 }
