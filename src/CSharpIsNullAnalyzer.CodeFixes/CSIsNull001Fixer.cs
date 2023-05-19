@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace CSharpIsNullAnalyzer;
 
@@ -19,7 +20,7 @@ public class CSIsNull001Fixer : CodeFixProvider
     private static readonly ImmutableArray<string> ReusableFixableDiagnosticIds = ImmutableArray.Create(
         CSIsNull001.Id);
 
-    private static readonly ConstantPatternSyntax NullPattern = SyntaxFactory.ConstantPattern(SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression));
+    private static readonly ConstantPatternSyntax NullPattern = ConstantPattern(LiteralExpression(SyntaxKind.NullLiteralExpression));
 
     /// <inheritdoc/>
     public override ImmutableArray<string> FixableDiagnosticIds => ReusableFixableDiagnosticIds;
@@ -38,16 +39,7 @@ public class CSIsNull001Fixer : CodeFixProvider
                     context.RegisterCodeFix(
                         CodeAction.Create(
                             Strings.CSIsNull001_FixTitle,
-                            ct =>
-                            {
-                                Document document = context.Document;
-                                IsPatternExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression or (int)SyntaxKind.DefaultLiteralExpression }
-                                    ? SyntaxFactory.IsPatternExpression(expr.Left, NullPattern)
-                                    : SyntaxFactory.IsPatternExpression(expr.Right, NullPattern);
-                                syntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
-                                document = document.WithSyntaxRoot(syntaxRoot);
-                                return Task.FromResult(document);
-                            },
+                            ct => expr.ReplaceBinaryExpressionWithIsPattern(context.Document, syntaxRoot!, NullPattern),
                             equivalenceKey: "isNull"),
                         diagnostic);
                 }

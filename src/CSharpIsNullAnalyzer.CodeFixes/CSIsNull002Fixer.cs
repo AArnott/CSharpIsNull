@@ -53,16 +53,7 @@ public class CSIsNull002Fixer : CodeFixProvider
                         context.RegisterCodeFix(
                             CodeAction.Create(
                                 Strings.CSIsNull002_Fix2Title,
-                                ct =>
-                                {
-                                    Document document = context.Document;
-                                    ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression or (int)SyntaxKind.DefaultLiteralExpression }
-                                        ? IsPatternExpression(expr.Left, NotNullPattern)
-                                        : IsPatternExpression(expr.Right, NotNullPattern);
-                                    SyntaxNode updatedSyntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
-                                    document = document.WithSyntaxRoot(updatedSyntaxRoot);
-                                    return Task.FromResult(document);
-                                },
+                                ct => expr.ReplaceBinaryExpressionWithIsPattern(context.Document, syntaxRoot!, NotNullPattern),
                                 equivalenceKey: IsNotNullEquivalenceKey),
                             diagnostic);
                     }
@@ -70,16 +61,7 @@ public class CSIsNull002Fixer : CodeFixProvider
                     context.RegisterCodeFix(
                         CodeAction.Create(
                             Strings.CSIsNull002_Fix1Title,
-                            ct =>
-                            {
-                                Document document = context.Document;
-                                ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression or (int)SyntaxKind.DefaultLiteralExpression }
-                                    ? BinaryExpression(SyntaxKind.IsExpression, expr.Left, ObjectLiteral)
-                                    : BinaryExpression(SyntaxKind.IsExpression, expr.Right, ObjectLiteral);
-                                SyntaxNode updatedSyntaxRoot = (syntaxRoot!).ReplaceNode(expr, changedExpression);
-                                document = document.WithSyntaxRoot(updatedSyntaxRoot);
-                                return Task.FromResult(document);
-                            },
+                            ct => expr.ReplaceBinaryExpressionWithIsExpression(context.Document, syntaxRoot!, ObjectLiteral),
                             equivalenceKey: IsObjectEquivalenceKey),
                         diagnostic);
                 }
