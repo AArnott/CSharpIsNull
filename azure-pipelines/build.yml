@@ -12,7 +12,7 @@ jobs:
     fetchDepth: 0 # avoid shallow clone so nbgv can do its work.
     clean: true
   - template: install-dependencies.yml
-  - script: dotnet tool run nbgv cloud -c
+  - script: dotnet nbgv cloud -c
     displayName: ⚙ Set build number
   - template: dotnet.yml
     parameters:
