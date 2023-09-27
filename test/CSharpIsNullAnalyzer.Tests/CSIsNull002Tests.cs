@@ -178,6 +178,68 @@ class Test
     }
 
     [Fact]
+    public async Task NotEqualsNullInLargerExpressionInExpressionTree_OffersOneCodeFix()
+    {
+        string source = @"
+using System;
+using System.Linq.Expressions;
+class Test
+{
+    void Method(int o)
+    {
+        bool? b = true;
+        Expression<Func<bool>> e = () => (b [|!= null|] || 3 < 5);
+    }
+}";
+
+        string fixedSource = @"
+using System;
+using System.Linq.Expressions;
+class Test
+{
+    void Method(int o)
+    {
+        bool? b = true;
+        Expression<Func<bool>> e = () => (b is object || 3 < 5);
+    }
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource, CSIsNull002Fixer.IsObjectEquivalenceKey);
+        await VerifyCS.VerifyCodeFixAsync(source, source, CSIsNull002Fixer.IsNotNullEquivalenceKey); // assert that this fix is not offered.
+    }
+
+    [Fact]
+    public async Task NullNotEqualsInLargerExpressionInExpressionTree_OffersOneCodeFix()
+    {
+        string source = @"
+using System;
+using System.Linq.Expressions;
+class Test
+{
+    void Method(int o)
+    {
+        bool? b = true;
+        Expression<Func<bool>> e = () => ([|null !=|] b || 3 < 5);
+    }
+}";
+
+        string fixedSource = @"
+using System;
+using System.Linq.Expressions;
+class Test
+{
+    void Method(int o)
+    {
+        bool? b = true;
+        Expression<Func<bool>> e = () => (b is object || 3 < 5);
+    }
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource, CSIsNull002Fixer.IsObjectEquivalenceKey);
+        await VerifyCS.VerifyCodeFixAsync(source, source, CSIsNull002Fixer.IsNotNullEquivalenceKey); // assert that this fix is not offered.
+    }
+
+    [Fact]
     public async Task NotEqualsNullInExpressionTree_TargetTyped_OffersOneCodeFix()
     {
         string source = @"
