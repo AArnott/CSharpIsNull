@@ -13,7 +13,7 @@
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="$(TargetRoslynVersion)" />
     <PackageVersion Include="Microsoft.CodeAnalysis" Version="$(TargetRoslynVersion)" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.1" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.5" />
     <PackageVersion Include="xunit" Version="2.5.1" />
   </ItemGroup>
   <ItemGroup>
