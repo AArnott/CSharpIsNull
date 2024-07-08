@@ -4,6 +4,7 @@
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Operations;
 
 namespace CSharpIsNullAnalyzer;
 
@@ -60,4 +61,12 @@ internal static class IOperationExtensions
             return default;
         }
     }
+
+    /// <summary>
+    /// Checks if this <paramref name="operation"/> is a null check.
+    /// </summary>
+    /// <param name="operation">The operation to check.</param>
+    /// <returns><see langword="true"/> if this operation checks for null, <see langword="false"/> otherwise.</returns>
+    internal static bool IsNullCheck(this IOperation operation) =>
+        operation is (IConversionOperation or ILiteralOperation or IDefaultValueOperation) and { ConstantValue: { HasValue: true, Value: null } };
 }

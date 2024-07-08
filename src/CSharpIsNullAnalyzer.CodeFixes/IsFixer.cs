@@ -46,7 +46,7 @@ namespace CSharpIsNullAnalyzer
             where T : ExpressionOrPatternSyntax
         {
             T expressionWithTrivia = expressionOrPattern.WithTriviaFrom(expr.Right);
-            ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression or (int)SyntaxKind.DefaultLiteralExpression }
+            ExpressionSyntax changedExpression = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression or (int)SyntaxKind.DefaultLiteralExpression } or DefaultExpressionSyntax
                 ? create(expr.Left, expressionWithTrivia)
                 : create(expr.Right.WithoutTrailingTrivia().WithTrailingTrivia(Space), expressionWithTrivia);
             SyntaxNode updatedSyntaxRoot = syntaxRoot.ReplaceNode(expr, changedExpression);
