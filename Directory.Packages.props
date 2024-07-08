@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="$(TargetRoslynVersion)" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.CodeFix.Testing" Version="1.1.1" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.CodeFix.Testing" Version="1.1.2" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="$(TargetRoslynVersion)" />
     <PackageVersion Include="Microsoft.CodeAnalysis" Version="$(TargetRoslynVersion)" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
