@@ -240,6 +240,62 @@ class Test
     }
 
     [Fact]
+    public async Task EqualsDefaultKeywordInIfExpression_ProducesDiagnostic()
+    {
+        string source = @"
+class Test
+{
+    void Method(string s)
+    {
+        if (s [|== default(string)|])
+        {
+        }
+    }
+}";
+
+        string fixedSource = @"
+class Test
+{
+    void Method(string s)
+    {
+        if (s is null)
+        {
+        }
+    }
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
+    }
+
+    [Fact]
+    public async Task EqualsDefaultTInIfExpression_ProducesDiagnostic()
+    {
+        string source = @"
+class Test
+{
+    void Method(Test t)
+    {
+        if (t [|== default(Test)|])
+        {
+        }
+    }
+}";
+
+        string fixedSource = @"
+class Test
+{
+    void Method(Test t)
+    {
+        if (t is null)
+        {
+        }
+    }
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
+    }
+
+    [Fact]
     public async Task EqualsDefaultValueType_ProducesNoDiagnostic()
     {
         string source = @"

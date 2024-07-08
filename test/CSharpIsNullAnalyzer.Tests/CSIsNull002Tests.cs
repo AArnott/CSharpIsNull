@@ -342,6 +342,86 @@ class Test
     }
 
     [Fact]
+    public async Task NotEqualsDefaultKeywordInIfExpression_ProducesDiagnostic()
+    {
+        string source = @"
+class Test
+{
+    void Method(string s)
+    {
+        if (s [|!= default(string)|])
+        {
+        }
+    }
+}";
+
+        string fixedSource1 = @"
+class Test
+{
+    void Method(string s)
+    {
+        if (s is object)
+        {
+        }
+    }
+}";
+
+        string fixedSource2 = @"
+class Test
+{
+    void Method(string s)
+    {
+        if (s is not null)
+        {
+        }
+    }
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource1, CSIsNull002Fixer.IsObjectEquivalenceKey);
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
+    }
+
+    [Fact]
+    public async Task NotEqualsDefaultTInIfExpression_ProducesDiagnostic()
+    {
+        string source = @"
+class Test
+{
+    void Method(Test t)
+    {
+        if (t [|!= default(Test)|])
+        {
+        }
+    }
+}";
+
+        string fixedSource1 = @"
+class Test
+{
+    void Method(Test t)
+    {
+        if (t is object)
+        {
+        }
+    }
+}";
+
+        string fixedSource2 = @"
+class Test
+{
+    void Method(Test t)
+    {
+        if (t is not null)
+        {
+        }
+    }
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource1, CSIsNull002Fixer.IsObjectEquivalenceKey);
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
+    }
+
+    [Fact]
     public async Task NotEqualsDefaultValueType_ProducesNoDiagnostic()
     {
         string source = @"

@@ -64,7 +64,7 @@ public class CSIsNull002 : DiagnosticAnalyzer
                             if (ctxt.Operation is IBinaryOperation { OperatorKind: BinaryOperatorKind.NotEquals } binaryOp)
                             {
                                 Location? location = null;
-                                if (binaryOp.RightOperand is IConversionOperation { ConstantValue: { HasValue: true, Value: null } } or ILiteralOperation { ConstantValue: { HasValue: true, Value: null } })
+                                if (binaryOp.RightOperand.IsNullCheck())
                                 {
                                     location = binaryOp.RightOperand.Syntax.GetLocation();
                                     if (binaryOp.Syntax is BinaryExpressionSyntax { OperatorToken: { } operatorLocation, Right: { } right })
@@ -72,7 +72,7 @@ public class CSIsNull002 : DiagnosticAnalyzer
                                         location = ctxt.Operation.Syntax.SyntaxTree.GetLocation(new TextSpan(operatorLocation.SpanStart, right.Span.End - operatorLocation.SpanStart));
                                     }
                                 }
-                                else if (binaryOp.LeftOperand is IConversionOperation { ConstantValue: { HasValue: true, Value: null } } or ILiteralOperation { ConstantValue: { HasValue: true, Value: null } })
+                                else if (binaryOp.LeftOperand.IsNullCheck())
                                 {
                                     location = binaryOp.LeftOperand.Syntax.GetLocation();
                                     if (binaryOp.Syntax is BinaryExpressionSyntax { OperatorToken: { } operatorLocation, Left: { } left })
@@ -81,7 +81,7 @@ public class CSIsNull002 : DiagnosticAnalyzer
                                     }
                                 }
 
-                                if (location is object)
+                                if (location is not null)
                                 {
                                     ImmutableDictionary<string, string?> properties = ImmutableDictionary<string, string?>.Empty;
                                     if (!binaryOp.IsWithinExpressionTree(linqExpressionType))
