@@ -17,6 +17,8 @@ jobs:
   - template: dotnet.yml
     parameters:
       RunTests: ${{ parameters.RunTests }}
+  - script: dotnet format --verify-no-changes --no-restore
+    displayName: 💅 Verify formatted code
   - template: publish-symbols.yml
   - ${{ if parameters.RunTests }}:
     - template: publish-codecoverage.yml
