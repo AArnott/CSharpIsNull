@@ -248,6 +248,43 @@ class Test
     }
 
     [Fact]
+    public async Task NotEqualsNullInQueryableLambda_OffersOneCodeFix()
+    {
+        string source = @"
+using System;
+using System.Linq;
+
+class Test
+{
+    IQueryable<Item> Method(IQueryable<Item> items, DateTime? toDate)
+        => items.Where(a => toDate [|!= null|] || a.Date <= toDate);
+}
+
+class Item
+{
+    public DateTime Date { get; set; }
+}";
+
+        string fixedSource = @"
+using System;
+using System.Linq;
+
+class Test
+{
+    IQueryable<Item> Method(IQueryable<Item> items, DateTime? toDate)
+        => items.Where(a => toDate is object || a.Date <= toDate);
+}
+
+class Item
+{
+    public DateTime Date { get; set; }
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource, CSIsNull002Fixer.IsObjectEquivalenceKey);
+        await VerifyCS.VerifyCodeFixAsync(source, source, CSIsNull002Fixer.IsNotNullEquivalenceKey); // assert that this fix is not offered.
+    }
+
+    [Fact]
     public async Task NotEqualsNullInExpressionTree_TargetTyped_OffersOneCodeFix()
     {
         string source = @"
