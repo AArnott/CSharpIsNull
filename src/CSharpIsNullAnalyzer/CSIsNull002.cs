@@ -50,7 +50,7 @@ public class CSIsNull002 : DiagnosticAnalyzer
         }
 
         context.EnableConcurrentExecution();
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.ReportDiagnostics);
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 
         context.RegisterCompilationStartAction(
             startContext =>
@@ -59,7 +59,7 @@ public class CSIsNull002 : DiagnosticAnalyzer
                 startContext.RegisterOperationAction(
                     ctxt =>
                     {
-                        if (ctxt.Operation.Type.SpecialType == SpecialType.System_Boolean)
+                        if (ctxt.Operation.Type?.SpecialType == SpecialType.System_Boolean)
                         {
                             if (ctxt.Operation is IBinaryOperation { OperatorKind: BinaryOperatorKind.NotEquals } binaryOp)
                             {

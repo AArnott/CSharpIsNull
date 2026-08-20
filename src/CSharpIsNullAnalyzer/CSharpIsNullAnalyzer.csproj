@@ -3,6 +3,7 @@
     <IsPackable>false</IsPackable>
     <PackageId>CSharpIsNullJustAnalyzer</PackageId>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <GitVersionBaseDirectory>$(MSBuildProjectDirectory)</GitVersionBaseDirectory>
   </PropertyGroup>
 
   <ItemGroup>
