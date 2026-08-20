@@ -49,7 +49,7 @@ Use #runSubagent for each step.
 3. Verify that tests succeed by running `tools/dotnet-test-cloud.ps1`.
 
 While these validations are described using `dotnet` CLI commands, some repos require using full msbuild.exe.
-You can detect this by checking the `azure-pipelines/dotnet.yml` or `.github/workflows/build.yml` files for use of one or the other tool.
+You can detect this by checking the `.github/workflows/build.yml` file for the build tool in use.
 
 You are *not* responsible for fixing issues that the merge did not cause.
 If validation fails for reasons that seem unrelated to the changes brought in by the merge, advise the user and ask how they'd like you to proceed.
