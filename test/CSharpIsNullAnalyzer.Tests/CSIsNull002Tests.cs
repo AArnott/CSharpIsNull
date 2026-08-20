@@ -2,17 +2,23 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using CSharpIsNullAnalyzer;
+using Microsoft.CodeAnalysis;
 using Xunit;
 using VerifyCS = CSharpCodeFixVerifier<CSharpIsNullAnalyzer.CSIsNull002, CSharpIsNullAnalyzer.CSIsNull002Fixer>;
 
 public class CSIsNull002Tests
 {
     [Fact]
-    public void HelpLinkPointsToPublishedDocumentation()
+    public void DescriptorUsesNeutralWordingAndPublishedHelpLink()
     {
         var analyzer = new CSIsNull002();
+        DiagnosticDescriptor descriptor = Assert.Single(analyzer.SupportedDiagnostics);
 
-        Assert.Equal("https://aarnott.github.io/CSharpIsNull/docs/analyzers/CSIsNull002.html", Assert.Single(analyzer.SupportedDiagnostics).HelpLinkUri);
+        Assert.Equal("Use an `is` expression for non-null checks", descriptor.Title.ToString());
+        Assert.Equal(
+            "Use an `is` expression instead of `!= null` for non-null checks so the compiler can help you avoid testing struct equality to null.",
+            descriptor.MessageFormat.ToString());
+        Assert.Equal("https://aarnott.github.io/CSharpIsNull/docs/analyzers/CSIsNull002.html", descriptor.HelpLinkUri);
     }
 
     [Fact]
@@ -38,6 +44,14 @@ class Test
 
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource1, CSIsNull002Fixer.IsObjectEquivalenceKey);
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
+
+        var preferredFixTest = new VerifyCS.Test
+        {
+            TestCode = source,
+            FixedCode = fixedSource2,
+            CodeActionIndex = 0,
+        };
+        await preferredFixTest.RunAsync(TestContext.Current.CancellationToken);
     }
 
     [Fact]
