@@ -21,6 +21,9 @@ public static partial class CSharpCodeFixVerifier<TAnalyzer, TCodeFix>
                 var parseOptions = (CSharpParseOptions)solution.GetProject(projectId)!.ParseOptions!;
                 solution = solution.WithProjectParseOptions(projectId, parseOptions.WithLanguageVersion(LanguageVersion.CSharp9));
 
+                var compilationOptions = (CSharpCompilationOptions)solution.GetProject(projectId)!.CompilationOptions!;
+                solution = solution.WithProjectCompilationOptions(projectId, compilationOptions.WithAllowUnsafe(true));
+
                 return solution;
             });
 
