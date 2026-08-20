@@ -14,19 +14,19 @@
     <PackageVersion Update="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="$(CodeAnalysisVersionForAnalyzers)" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="$(CodeAnalysisVersionForAnalyzers)" />
     <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
-    <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.19" />
     <PackageVersion Include="System.Buffers" Version="4.5.1" />
-    <PackageVersion Include="System.Collections.Immutable" Version="9.0.0" />
-    <PackageVersion Include="System.Composition" Version="9.0.0" />
-    <PackageVersion Include="System.Composition.AttributedModel" Version="9.0.0" />
-    <PackageVersion Include="System.Composition.Convention" Version="9.0.0" />
-    <PackageVersion Include="System.Composition.Hosting" Version="9.0.0" />
-    <PackageVersion Include="System.Composition.Runtime" Version="9.0.0" />
-    <PackageVersion Include="System.Composition.TypedParts" Version="9.0.0" />
-    <PackageVersion Include="System.IO.Pipelines" Version="9.0.0" />
+    <PackageVersion Include="System.Collections.Immutable" Version="9.0.19" />
+    <PackageVersion Include="System.Composition" Version="9.0.19" />
+    <PackageVersion Include="System.Composition.AttributedModel" Version="9.0.19" />
+    <PackageVersion Include="System.Composition.Convention" Version="9.0.19" />
+    <PackageVersion Include="System.Composition.Hosting" Version="9.0.19" />
+    <PackageVersion Include="System.Composition.Runtime" Version="9.0.19" />
+    <PackageVersion Include="System.Composition.TypedParts" Version="9.0.19" />
+    <PackageVersion Include="System.IO.Pipelines" Version="9.0.19" />
     <PackageVersion Include="System.Memory" Version="4.5.5" />
     <PackageVersion Include="System.Numerics.Vectors" Version="4.5.0" />
-    <PackageVersion Include="System.Reflection.Metadata" Version="9.0.0" />
+    <PackageVersion Include="System.Reflection.Metadata" Version="9.0.19" />
     <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
     <PackageVersion Include="System.Text.Encoding.CodePages" Version="7.0.0" />
     <PackageVersion Include="System.Threading.Channels" Version="7.0.0" />
