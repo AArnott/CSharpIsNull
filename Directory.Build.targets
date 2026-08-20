@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
+  <!-- Shipping analyzer projects use an independently maintained compiler-host compatibility baseline after central package versions are available. -->
+  <Import Project="$(MSBuildThisFileDirectory)Directory.Packages.Analyzers.props" Condition="'$(IsAnalyzerProject)' == 'true'" />
+
   <ItemGroup>
     <!-- Avoid compile error about missing namespace when combining ImplicitUsings with .NET Framework target frameworks. -->
     <Using Remove="System.Net.Http" Condition="'$(TargetFrameworkIdentifier)'=='.NETFramework'" />
