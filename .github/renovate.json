@@ -22,7 +22,6 @@
 		},
 		{
 			"matchFileNames": ["Directory.Packages.Analyzers.props"],
-			"matchUpdateTypes": ["major", "minor"],
 			"enabled": false
 		},
 		{
