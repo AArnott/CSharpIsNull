@@ -12,6 +12,7 @@
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="$(TargetRoslynVersion)" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.CodeFix.Testing" Version="1.1.2" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="$(TargetRoslynVersion)" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.ResxSourceGenerator" Version="5.0.0-1.25277.114" />
     <PackageVersion Include="Microsoft.CodeAnalysis" Version="$(TargetRoslynVersion)" />
   </ItemGroup>
   <ItemGroup Label="Library.Template">
