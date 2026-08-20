@@ -10,8 +10,8 @@
 
 ### Analyzers
 
-* [CSIsNull001](doc/analyzers/CSIsNull001.md) to catch uses of `== null`
-* [CSIsNull002](doc/analyzers/CSIsNull002.md) to catch uses of `!= null`
+* [CSIsNull001](https://aarnott.github.io/CSharpIsNull/docs/analyzers/CSIsNull001.html) to catch uses of `== null`
+* [CSIsNull002](https://aarnott.github.io/CSharpIsNull/docs/analyzers/CSIsNull002.html) to catch uses of `!= null`
 
 ## Consumption
 

@@ -2,11 +2,16 @@
 
 ## Installation
 
-Consume this library via its NuGet Package.
-Click on the badge to find its latest version and the instructions for consuming it that best apply to your project.
+Install the analyzer package in the projects you want to check:
 
-[![NuGet package](https://img.shields.io/nuget/v/Library.svg)](https://nuget.org/packages/Library)
+```xml
+<PackageReference Include="CSharpIsNullAnalyzer" Version="VERSION" PrivateAssets="all" />
+```
+
+Choose `VERSION` from the [CSharpIsNullAnalyzer package page](https://www.nuget.org/packages/CSharpIsNullAnalyzer).
 
 ## Usage
 
-TODO
+The analyzers report equality and inequality comparisons with `null`. Apply the supplied code fixes to replace them with pattern syntax, including a bulk fix across the project or solution.
+
+See [Analyzer rules](analyzers/index.md) for examples and details.

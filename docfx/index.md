@@ -4,6 +4,6 @@ _layout: landing
 
 # Overview
 
-This is your docfx landing page.
+CSharpIsNull provides Roslyn analyzers and code fixes that replace overloaded equality checks against `null` with C# pattern syntax.
 
-Click "Docs" across the top to get started.
+Install the [CSharpIsNullAnalyzer NuGet package](https://www.nuget.org/packages/CSharpIsNullAnalyzer), then see the [analyzer rules](docs/analyzers/index.md) for the diagnostics and available fixes.

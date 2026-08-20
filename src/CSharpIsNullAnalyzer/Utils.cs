@@ -15,6 +15,6 @@ internal static class Utils
     /// <returns>The URL for the analyzer's documentation.</returns>
     internal static string GetHelpLink(string analyzerId)
     {
-        return $"https://github.com/AArnott/CSharpIsNull/blob/main/doc/analyzers/{analyzerId}.md";
+        return $"https://aarnott.github.io/CSharpIsNull/docs/analyzers/{analyzerId}.html";
     }
 }
