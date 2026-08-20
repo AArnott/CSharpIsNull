@@ -79,7 +79,7 @@ namespace CSharpIsNullAnalyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use `is object` instead of `!= null` for null checks so the compiler can help you avoid testing struct equality to null..
+        ///   Looks up a localized string similar to Use an `is` expression instead of `!= null` for non-null checks so the compiler can help you avoid testing struct equality to null..
         /// </summary>
         internal static string CSIsNull002_MessageFormat {
             get {
@@ -88,7 +88,7 @@ namespace CSharpIsNullAnalyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use `is object` for non-null checks.
+        ///   Looks up a localized string similar to Use an `is` expression for non-null checks.
         /// </summary>
         internal static string CSIsNull002_Title {
             get {

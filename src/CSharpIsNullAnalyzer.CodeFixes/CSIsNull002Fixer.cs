@@ -47,6 +47,7 @@ public class CSIsNull002Fixer : CodeFixProvider
                 BinaryExpressionSyntax? expr = syntaxRoot?.FindNode(diagnostic.Location.SourceSpan, getInnermostNodeForTie: true).FirstAncestorOrSelf<BinaryExpressionSyntax>();
                 if (expr is not null)
                 {
+                    // Registration order determines the order shown in the code-fix menu.
                     if (context.Document.Project.ParseOptions is CSharpParseOptions { LanguageVersion: >= LanguageVersion.CSharp9 } &&
                         diagnostic.Properties.ContainsKey(CSIsNull002.OfferIsNotNullFixKey))
                     {

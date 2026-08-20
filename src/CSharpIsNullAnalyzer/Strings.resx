@@ -124,9 +124,9 @@
     <value>Use `is null` for null checks</value>
   </data>
   <data name="CSIsNull002_MessageFormat" xml:space="preserve">
-    <value>Use `is object` instead of `!= null` for null checks so the compiler can help you avoid testing struct equality to null.</value>
+    <value>Use an `is` expression instead of `!= null` for non-null checks so the compiler can help you avoid testing struct equality to null.</value>
   </data>
   <data name="CSIsNull002_Title" xml:space="preserve">
-    <value>Use `is object` for non-null checks</value>
+    <value>Use an `is` expression for non-null checks</value>
   </data>
 </root>
