@@ -13,12 +13,3 @@
 * [CSIsNull001](https://aarnott.github.io/CSharpIsNull/docs/analyzers/CSIsNull001.html) to catch uses of `== null`
 * [CSIsNull002](https://aarnott.github.io/CSharpIsNull/docs/analyzers/CSIsNull002.html) to catch uses of `!= null`
 
-## Consumption
-
-Install it via NuGet through the nuget badge at the top of this file.
-
-Then install the package with this command in your Package Manager Console:
-
-```ps1
-Install-Package CSharpIsNullAnalyzer -pre
-```
