@@ -107,6 +107,46 @@ class Test
     }
 
     [Fact]
+    public async Task EqualsNullWithVoidPointer_ProducesDiagnostic()
+    {
+        string source = @"
+unsafe class Test
+{
+    bool Method(void* pointer) => pointer [|== null|];
+}";
+
+        string fixedSource = @"
+unsafe class Test
+{
+    bool Method(void* pointer) => pointer is null;
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
+    }
+
+    [Fact]
+    public async Task EqualsNullWithIntPtrPointer_ProducesDiagnostic()
+    {
+        string source = @"
+using System;
+
+unsafe class Test
+{
+    bool Method(IntPtr* pointer) => pointer [|== null|];
+}";
+
+        string fixedSource = @"
+using System;
+
+unsafe class Test
+{
+    bool Method(IntPtr* pointer) => pointer is null;
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
+    }
+
+    [Fact]
     public async Task EqualsInArgument_ProducesDiagnostic()
     {
         string source = @"

@@ -47,6 +47,12 @@ public class CSIsNull002Fixer : CodeFixProvider
                 BinaryExpressionSyntax? expr = syntaxRoot?.FindNode(diagnostic.Location.SourceSpan, getInnermostNodeForTie: true).FirstAncestorOrSelf<BinaryExpressionSyntax>();
                 if (expr is not null)
                 {
+                    SemanticModel? semanticModel = await context.Document.GetSemanticModelAsync(context.CancellationToken);
+                    ExpressionSyntax operand = expr.Right is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.NullLiteralExpression or (int)SyntaxKind.DefaultLiteralExpression } or DefaultExpressionSyntax
+                        ? expr.Left
+                        : expr.Right;
+                    bool isPointer = semanticModel?.GetTypeInfo(operand, context.CancellationToken).Type is IPointerTypeSymbol;
+
                     // Registration order determines the order shown in the code-fix menu.
                     if (context.Document.Project.ParseOptions is CSharpParseOptions { LanguageVersion: >= LanguageVersion.CSharp9 } &&
                         diagnostic.Properties.ContainsKey(CSIsNull002.OfferIsNotNullFixKey))
@@ -59,12 +65,15 @@ public class CSIsNull002Fixer : CodeFixProvider
                             diagnostic);
                     }
 
-                    context.RegisterCodeFix(
-                        CodeAction.Create(
-                            Strings.CSIsNull002_Fix1Title,
-                            ct => expr.ReplaceBinaryExpressionWithIsExpression(context.Document, syntaxRoot!, ObjectLiteral),
-                            equivalenceKey: IsObjectEquivalenceKey),
-                        diagnostic);
+                    if (!isPointer)
+                    {
+                        context.RegisterCodeFix(
+                            CodeAction.Create(
+                                Strings.CSIsNull002_Fix1Title,
+                                ct => expr.ReplaceBinaryExpressionWithIsExpression(context.Document, syntaxRoot!, ObjectLiteral),
+                                equivalenceKey: IsObjectEquivalenceKey),
+                            diagnostic);
+                    }
                 }
             }
         }

@@ -160,6 +160,29 @@ class Test
     }
 
     [Fact]
+    public async Task NotEqualsNullWithIntPtrPointer_OffersOnlyIsNotNullFix()
+    {
+        string source = @"
+using System;
+
+unsafe class Test
+{
+    bool Method(IntPtr* pointer) => pointer [|!= null|];
+}";
+
+        string fixedSource = @"
+using System;
+
+unsafe class Test
+{
+    bool Method(IntPtr* pointer) => pointer is not null;
+}";
+
+        await VerifyCS.VerifyCodeFixAsync(source, fixedSource, CSIsNull002Fixer.IsNotNullEquivalenceKey);
+        await VerifyCS.VerifyCodeFixAsync(source, source, CSIsNull002Fixer.IsObjectEquivalenceKey);
+    }
+
+    [Fact]
     public async Task NullNotEqualsInArgument_ProducesDiagnostic()
     {
         string source = @"
