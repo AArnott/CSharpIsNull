@@ -7,6 +7,14 @@ using VerifyCS = CSharpCodeFixVerifier<CSharpIsNullAnalyzer.CSIsNull001, CSharpI
 public class CsIsNull001Tests
 {
     [Fact]
+    public void HelpLinkPointsToPublishedDocumentation()
+    {
+        var analyzer = new CSharpIsNullAnalyzer.CSIsNull001();
+
+        Assert.Equal("https://aarnott.github.io/CSharpIsNull/docs/analyzers/CSIsNull001.html", Assert.Single(analyzer.SupportedDiagnostics).HelpLinkUri);
+    }
+
+    [Fact]
     public async Task EqualsNullInExpressionBody_ProducesDiagnostic()
     {
         string source = @"

@@ -1,0 +1,4 @@
+**/CSharpIsNullAnalyzer.dll
+**/CSharpIsNullAnalyzer.CodeFixes.dll
+tools/install.ps1
+tools/uninstall.ps1

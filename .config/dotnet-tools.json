@@ -3,22 +3,53 @@
   "isRoot": true,
   "tools": {
     "powershell": {
-      "version": "7.4.3",
+      "version": "7.6.5",
       "commands": [
         "pwsh"
-      ]
+      ],
+      "rollForward": false
     },
     "dotnet-coverage": {
-      "version": "17.11.3",
+      "version": "18.10.0",
       "commands": [
         "dotnet-coverage"
-      ]
+      ],
+      "rollForward": false
     },
     "nbgv": {
-      "version": "3.6.139",
+      "version": "3.10.91",
       "commands": [
         "nbgv"
-      ]
+      ],
+      "rollForward": false
+    },
+    "docfx": {
+      "version": "2.78.5",
+      "commands": [
+        "docfx"
+      ],
+      "rollForward": false
+    },
+    "nerdbank.dotnetrepotools": {
+      "version": "1.5.42",
+      "commands": [
+        "repo"
+      ],
+      "rollForward": false
+    },
+    "dotnet-symbol": {
+      "version": "9.0.661903",
+      "commands": [
+        "dotnet-symbol"
+      ],
+      "rollForward": false
+    },
+    "sign": {
+      "version": "0.9.1-beta.26371.2",
+      "commands": [
+        "sign"
+      ],
+      "rollForward": false
     }
   }
 }
