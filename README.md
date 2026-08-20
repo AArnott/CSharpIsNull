@@ -1,6 +1,6 @@
 # C# null test syntax analyzers
 
-[![NuGet package](https://img.shields.io/nuget/v/CSharpIsNullAnalyzer.svg)](https://nuget.org/packages/CSharpIsNullAnalyzer)
+[![NuGet package](https://img.shields.io/nuget/v/CSharpIsNullAnalyzer.svg)](https://www.nuget.org/packages/CSharpIsNullAnalyzer)
 [![Build Status](https://github.com/AArnott/CSharpIsNull/actions/workflows/build.yml/badge.svg)](https://github.com/AArnott/CSharpIsNull/actions/workflows/build.yml)
 
 ## Features
