@@ -3,12 +3,13 @@
 
 using CSharpIsNullAnalyzer;
 using Microsoft.CodeAnalysis;
+using TUnit;
 using Xunit;
 using VerifyCS = CSharpCodeFixVerifier<CSharpIsNullAnalyzer.CSIsNull002, CSharpIsNullAnalyzer.CSIsNull002Fixer>;
 
 public class CSIsNull002Tests
 {
-    [Fact]
+    [Test]
     public void DescriptorUsesNeutralWordingAndPublishedHelpLink()
     {
         var analyzer = new CSIsNull002();
@@ -21,7 +22,7 @@ public class CSIsNull002Tests
         Assert.Equal("https://aarnott.github.io/CSharpIsNull/docs/analyzers/CSIsNull002.html", descriptor.HelpLinkUri);
     }
 
-    [Fact]
+    [Test]
     public async Task GeneratedCode_DoesNotProduceDiagnostic()
     {
         const string source = /* lang=c#-test */ """
@@ -34,10 +35,10 @@ public class CSIsNull002Tests
 
         var test = new VerifyCS.Test();
         test.TestState.Sources.Add(("Generated.g.cs", source));
-        await test.RunAsync(TestContext.Current.CancellationToken);
+        await test.RunAsync(TestContext.Current!.Execution.CancellationToken);
     }
 
-    [Fact]
+    [Test]
     public async Task NotEqualsNullInExpressionBody_ProducesDiagnostic()
     {
         string source = @"
@@ -67,10 +68,10 @@ class Test
             FixedCode = fixedSource2,
             CodeActionIndex = 0,
         };
-        await preferredFixTest.RunAsync(TestContext.Current.CancellationToken);
+        await preferredFixTest.RunAsync(TestContext.Current!.Execution.CancellationToken);
     }
 
-    [Fact]
+    [Test]
     public async Task NullNotEqualsInExpressionBody_ProducesDiagnostic()
     {
         string source = @"
@@ -95,7 +96,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
     }
 
-    [Fact]
+    [Test]
     public async Task NotEqualsNullInIfExpression_ProducesDiagnostic()
     {
         string source = @"
@@ -135,7 +136,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
     }
 
-    [Fact]
+    [Test]
     public async Task NullNotEqualsInIfExpression_ProducesDiagnostic()
     {
         string source = @"
@@ -175,7 +176,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
     }
 
-    [Fact]
+    [Test]
     public async Task NotEqualsNullWithIntPtrPointer_OffersOnlyIsNotNullFix()
     {
         string source = @"
@@ -198,7 +199,7 @@ unsafe class Test
         await VerifyCS.VerifyCodeFixAsync(source, source, CSIsNull002Fixer.IsObjectEquivalenceKey);
     }
 
-    [Fact]
+    [Test]
     public async Task NullNotEqualsInArgument_ProducesDiagnostic()
     {
         string source = @"
@@ -238,7 +239,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
     }
 
-    [Fact]
+    [Test]
     public async Task NotEqualsNullInLargerExpressionInExpressionTree_OffersOneCodeFix()
     {
         string source = @"
@@ -269,7 +270,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, source, CSIsNull002Fixer.IsNotNullEquivalenceKey); // assert that this fix is not offered.
     }
 
-    [Fact]
+    [Test]
     public async Task NullNotEqualsInLargerExpressionInExpressionTree_OffersOneCodeFix()
     {
         string source = @"
@@ -300,7 +301,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, source, CSIsNull002Fixer.IsNotNullEquivalenceKey); // assert that this fix is not offered.
     }
 
-    [Fact]
+    [Test]
     public async Task NotEqualsNullInQueryableLambda_OffersOneCodeFix()
     {
         string source = @"
@@ -337,7 +338,7 @@ class Item
         await VerifyCS.VerifyCodeFixAsync(source, source, CSIsNull002Fixer.IsNotNullEquivalenceKey); // assert that this fix is not offered.
     }
 
-    [Fact]
+    [Test]
     public async Task NotEqualsNullInExpressionTree_TargetTyped_OffersOneCodeFix()
     {
         string source = @"
@@ -368,7 +369,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, source, CSIsNull002Fixer.IsNotNullEquivalenceKey); // assert that this fix is not offered.
     }
 
-    [Fact]
+    [Test]
     public async Task NotEqualsNullInExpressionTree_OffersOneCodeFix()
     {
         string source = @"
@@ -399,7 +400,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, source, CSIsNull002Fixer.IsNotNullEquivalenceKey); // assert that this fix is not offered.
     }
 
-    [Fact]
+    [Test]
     public async Task NotEqualsDefaultInIfExpression_ProducesDiagnostic()
     {
         string source = @"
@@ -439,7 +440,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
     }
 
-    [Fact]
+    [Test]
     public async Task NotEqualsDefaultKeywordInIfExpression_ProducesDiagnostic()
     {
         string source = @"
@@ -479,7 +480,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
     }
 
-    [Fact]
+    [Test]
     public async Task NotEqualsDefaultTInIfExpression_ProducesDiagnostic()
     {
         string source = @"
@@ -519,7 +520,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
     }
 
-    [Fact]
+    [Test]
     public async Task NotEqualsDefaultValueType_ProducesNoDiagnostic()
     {
         string source = @"
@@ -536,7 +537,7 @@ class Test
         await VerifyCS.VerifyAnalyzerAsync(source);
     }
 
-    [Fact]
+    [Test]
     public async Task CodeFixDoesNotAffectFormatting()
     {
         string source = @"
@@ -576,7 +577,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource2, CSIsNull002Fixer.IsNotNullEquivalenceKey);
     }
 
-    [Fact]
+    [Test]
     public async Task CodeFixDoesNotAffectFormattingReversed()
     {
         string source = @"
