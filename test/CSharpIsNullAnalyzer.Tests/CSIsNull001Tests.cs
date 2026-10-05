@@ -1,12 +1,13 @@
 // Copyright (c) Andrew Arnott. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using TUnit;
 using Xunit;
 using VerifyCS = CSharpCodeFixVerifier<CSharpIsNullAnalyzer.CSIsNull001, CSharpIsNullAnalyzer.CSIsNull001Fixer>;
 
 public class CsIsNull001Tests
 {
-    [Fact]
+    [Test]
     public void HelpLinkPointsToPublishedDocumentation()
     {
         var analyzer = new CSharpIsNullAnalyzer.CSIsNull001();
@@ -14,7 +15,7 @@ public class CsIsNull001Tests
         Assert.Equal("https://aarnott.github.io/CSharpIsNull/docs/analyzers/CSIsNull001.html", Assert.Single(analyzer.SupportedDiagnostics).HelpLinkUri);
     }
 
-    [Fact]
+    [Test]
     public async Task GeneratedCode_DoesNotProduceDiagnostic()
     {
         const string source = /* lang=c#-test */ """
@@ -27,10 +28,10 @@ public class CsIsNull001Tests
 
         var test = new VerifyCS.Test();
         test.TestState.Sources.Add(("Generated.g.cs", source));
-        await test.RunAsync(TestContext.Current.CancellationToken);
+        await test.RunAsync(TestContext.Current!.Execution.CancellationToken);
     }
 
-    [Fact]
+    [Test]
     public async Task EqualsNullInExpressionBody_ProducesDiagnostic()
     {
         string source = @"
@@ -48,7 +49,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
     }
 
-    [Fact]
+    [Test]
     public async Task NullEqualsInExpressionBody_ProducesDiagnostic()
     {
         string source = @"
@@ -66,7 +67,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
     }
 
-    [Fact]
+    [Test]
     public async Task EqualsNullInIfExpression_ProducesDiagnostic()
     {
         string source = @"
@@ -94,7 +95,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
     }
 
-    [Fact]
+    [Test]
     public async Task NullEqualsInIfExpression_ProducesDiagnostic()
     {
         string source = @"
@@ -122,7 +123,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
     }
 
-    [Fact]
+    [Test]
     public async Task EqualsNullWithVoidPointer_ProducesDiagnostic()
     {
         string source = @"
@@ -140,7 +141,7 @@ unsafe class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
     }
 
-    [Fact]
+    [Test]
     public async Task EqualsNullWithIntPtrPointer_ProducesDiagnostic()
     {
         string source = @"
@@ -162,7 +163,7 @@ unsafe class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
     }
 
-    [Fact]
+    [Test]
     public async Task EqualsInArgument_ProducesDiagnostic()
     {
         string source = @"
@@ -190,7 +191,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
     }
 
-    [Fact]
+    [Test]
     public async Task EqualsNull_NearExpressionTreeAssignment_ProducesDiagnostic()
     {
         string source = @"
@@ -221,7 +222,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
     }
 
-    [Fact]
+    [Test]
     public async Task EqualsNullInExpressionTree_ProducesNoDiagnostic()
     {
         string source = @"
@@ -239,7 +240,7 @@ class Test
         await VerifyCS.VerifyAnalyzerAsync(source);
     }
 
-    [Fact]
+    [Test]
     public async Task NullEqualsInExpressionTree_ProducesNoDiagnostic()
     {
         string source = @"
@@ -257,7 +258,7 @@ class Test
         await VerifyCS.VerifyAnalyzerAsync(source);
     }
 
-    [Fact]
+    [Test]
     public async Task EqualsNullInExpressionTree_TargetTyped_ProducesNoDiagnostic()
     {
         string source = @"
@@ -275,7 +276,7 @@ class Test
         await VerifyCS.VerifyAnalyzerAsync(source);
     }
 
-    [Fact]
+    [Test]
     public async Task EqualsDefaultInIfExpression_ProducesDiagnostic()
     {
         string source = @"
@@ -303,7 +304,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
     }
 
-    [Fact]
+    [Test]
     public async Task EqualsDefaultKeywordInIfExpression_ProducesDiagnostic()
     {
         string source = @"
@@ -331,7 +332,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
     }
 
-    [Fact]
+    [Test]
     public async Task EqualsDefaultTInIfExpression_ProducesDiagnostic()
     {
         string source = @"
@@ -359,7 +360,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
     }
 
-    [Fact]
+    [Test]
     public async Task EqualsDefaultValueType_ProducesNoDiagnostic()
     {
         string source = @"
@@ -376,7 +377,7 @@ class Test
         await VerifyCS.VerifyAnalyzerAsync(source);
     }
 
-    [Fact]
+    [Test]
     public async Task CodeFixDoesNotAffectFormatting()
     {
         string source = @"
@@ -404,7 +405,7 @@ class Test
         await VerifyCS.VerifyCodeFixAsync(source, fixedSource);
     }
 
-    [Fact]
+    [Test]
     public async Task CodeFixDoesNotAffectFormattingReversed()
     {
         string source = @"

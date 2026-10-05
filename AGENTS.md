@@ -17,6 +17,7 @@
 
 * There should generally be one test project (under the `test` directory) per shipping project (under the `src` directory). Test projects are named after the project being tested with a `.Tests` suffix.
 * Tests use TUnit with Microsoft.Testing.Platform (MTP v2), while retaining xUnit assertions. Traditional VSTest `--filter` syntax does NOT work.
+* Some tests are known to be unstable. When running tests, you should skip the unstable ones by using `-- --treenode-filter "/**[Category!=FailsInCloudTest]"`.
 
 ### Running Tests
 
@@ -27,37 +28,37 @@ dotnet test --no-build -c Release
 
 **Run tests for a specific test project**:
 ```bash
-dotnet test --project test/Library.Tests/Library.Tests.csproj --no-build -c Release
+dotnet test --project test/CSharpIsNullAnalyzer.Tests/CSharpIsNullAnalyzer.Tests.csproj --no-build -c Release
 ```
 
 **Run a single test method**:
 ```bash
-dotnet test --project test/Library.Tests/Library.Tests.csproj --no-build -c Release -- --treenode-filter "/*/*/ClassName/MethodName"
+dotnet test --project test/CSharpIsNullAnalyzer.Tests/CSharpIsNullAnalyzer.Tests.csproj --no-build -c Release -- --treenode-filter "/*/*/ClassName/MethodName"
 ```
 
 **Run all tests in a test class**:
 ```bash
-dotnet test --project test/Library.Tests/Library.Tests.csproj --no-build -c Release -- --treenode-filter "/*/*/ClassName/*"
+dotnet test --project test/CSharpIsNullAnalyzer.Tests/CSharpIsNullAnalyzer.Tests.csproj --no-build -c Release -- --treenode-filter "/*/*/ClassName/*"
 ```
 
 **Run tests with wildcard matching** (supports wildcards at beginning and/or end):
 ```bash
-dotnet test --project test/Library.Tests/Library.Tests.csproj --no-build -c Release -- --treenode-filter "/*/*/*/*Pattern*"
+dotnet test --project test/CSharpIsNullAnalyzer.Tests/CSharpIsNullAnalyzer.Tests.csproj --no-build -c Release -- --treenode-filter "/*/*/*/*Pattern*"
 ```
 
 **Run tests with a specific property**:
 ```bash
-dotnet test --project test/Library.Tests/Library.Tests.csproj --no-build -c Release -- --treenode-filter "/*/*/*/*[PropertyName=value]"
+dotnet test --project test/CSharpIsNullAnalyzer.Tests/CSharpIsNullAnalyzer.Tests.csproj --no-build -c Release -- --treenode-filter "/*/*/*/*[PropertyName=value]"
 ```
 
 **Run tests for a specific framework only**:
 ```bash
-dotnet test --project test/Library.Tests/Library.Tests.csproj --no-build -c Release --framework net8.0
+dotnet test --project test/CSharpIsNullAnalyzer.Tests/CSharpIsNullAnalyzer.Tests.csproj --no-build -c Release --framework net8.0
 ```
 
 **List all available tests without running them**:
 ```bash
-cd test/Library.Tests
+cd test/CSharpIsNullAnalyzer.Tests
 dotnet run --no-build -c Release --framework net8.0 -- --list-tests
 ```
 
