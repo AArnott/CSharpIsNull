@@ -22,10 +22,4 @@
     <PackageReference Include="xunit.v3.assert.aot" Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)','net9.0'))" />
     <PackageReference Include="xunit.v3.assert" Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)','net9.0'))" />
   </ItemGroup>
-
-  <ItemGroup>
-    <!-- Projects with their own version.json. AssemblyVersionTests verifies that it (not the root version.json) determines their assembly version. -->
-    <NestedVersionJsonProject Include="..\..\src\CSharpIsNullAnalyzer\CSharpIsNullAnalyzer.csproj" />
-    <NestedVersionJsonProject Include="..\..\src\CSharpIsNullAnalyzer.CodeFixes\CSharpIsNullAnalyzer.CodeFixes.csproj" />
-  </ItemGroup>
 </Project>
