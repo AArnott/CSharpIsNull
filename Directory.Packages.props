@@ -15,8 +15,8 @@
     <PackageVersion Include="Microsoft.CodeAnalysis.ResxSourceGenerator" Version="5.0.0-1.25277.114" />
     <PackageVersion Include="Microsoft.CodeAnalysis" Version="$(TestRoslynVersion)" />
       <PackageVersion Include="TUnit.Engine" Version="1.65.68" />
-      <PackageVersion Include="xunit.v3.assert" Version="4.0.1" />
-      <PackageVersion Include="xunit.v3.assert.aot" Version="4.0.1" />
+      <PackageVersion Include="xunit.v3.assert" Version="4.0.2" />
+      <PackageVersion Include="xunit.v3.assert.aot" Version="4.0.2" />
   </ItemGroup>
   <ItemGroup Label="Library.Template">
     <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.11.2" />
