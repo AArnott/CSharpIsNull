@@ -48,7 +48,7 @@ There may be tests that are known to be unstable or have special requirements. T
 Tests remain managed-only: `test/Directory.Build.props` sets `PublishNativeAOTTests` to `false`.
 This repository does not target NativeAOT or run an AOT compatibility project.
 Run `dotnet build -c Release`, then `./tools/dotnet-test-cloud.ps1 -Configuration Release`.
-To run just the analyzer tests, use `dotnet test --project test/CSharpIsNullAnalyzer.Tests/CSharpIsNullAnalyzer.Tests.csproj --no-build -c Release --framework net8.0`.
+To run just the analyzer tests, use `dotnet test --project test/CSharpIsNullAnalyzer.Tests/CSharpIsNullAnalyzer.Tests.csproj --no-build -c Release --framework net10.0`.
 
 ## Releases
 
